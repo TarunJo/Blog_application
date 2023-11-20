@@ -1,7 +1,9 @@
 package com.mountblue.spring.blogApplication;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class BlogApplication {
@@ -10,4 +12,10 @@ public class BlogApplication {
 		SpringApplication.run(BlogApplication.class, args);
 	}
 
+	@Bean
+	public CommandLineRunner commandLineRunner() {
+		return runner -> {
+			System.out.println("Hello World!");
+		};
+	}
 }
