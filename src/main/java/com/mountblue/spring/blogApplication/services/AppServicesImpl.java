@@ -7,9 +7,11 @@ import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AppServicesImpl implements AppServices {
@@ -34,6 +36,7 @@ public class AppServicesImpl implements AppServices {
 
         String[] givenTags = tag.getName().split(",");
         for(String tempTag: givenTags) {
+            tempTag = tempTag.trim();
             if(tagName.contains(tempTag)) {
                 for(Tag theTag: tags) {
                     if(theTag.getName().equals(tempTag))
@@ -55,14 +58,82 @@ public class AppServicesImpl implements AppServices {
     }
 
     @Override
-    public List<Post> findAllPost() {
-        TypedQuery<Post> query = entityManager.createQuery("from Post", Post.class);
+    @Transactional
+    public void updatePost(Post post, String tags) {
+        Post newPost = new Post(post.getTitle(), post.getExcerpt(), post.getContent(), post.getAuthor());
+        newPost.setId(post.getId());
 
-        return query.getResultList();
+        TypedQuery<Tag> query = entityManager.createQuery("from Tag", Tag.class);
+        List<Tag> tag = query.getResultList();
+        List<String> tagName = new ArrayList<>();
+
+        for(Tag tempTag: tag) {
+            tagName.add(tempTag.getName());
+        }
+
+        String[] givenTags = tags.split(",");
+        for(String tempTag: givenTags) {
+            tempTag = tempTag.trim();
+            if(tagName.contains(tempTag)) {
+                for(Tag theTag: tag) {
+                    if(theTag.getName().equals(tempTag))
+                    {
+                        System.out.println("2nd layer");
+                        newPost.addTags(theTag);
+                        break;
+                    }
+                }
+            }
+            else {
+                Tag createTag = new Tag(tempTag);
+                entityManager.persist(createTag);
+                newPost.addTags(createTag);
+            }
+        }
+
+        entityManager.merge(newPost);
     }
 
     @Override
-    public Post getPostById(int theId) {
-        return entityManager.find(Post.class, theId);
+    public void createModels(Model model) {
+        model.addAttribute("post", new Post());
+        model.addAttribute("tag", new Tag());
+    }
+
+    @Override
+    public void editPost(Model model, int postId) {
+        Post post = entityManager.find(Post.class, postId);
+        model.addAttribute("post", post);
+
+        List<Tag> tags = post.getTags();
+        String theTags = "";
+
+        for(Tag tag: tags) {
+            theTags += tag.getName()+", ";
+        }
+
+        if(!theTags.isEmpty()) {
+            theTags = theTags.substring(0, theTags.length()-2);
+        }
+
+        model.addAttribute("tags", theTags);
+    }
+
+    @Override
+    @Transactional
+    public void deletePost(int postId) {
+        Post post = entityManager.find(Post.class, postId);
+        entityManager.remove(post);
+    }
+
+    @Override
+    public void findAllPost(Model model) {
+        TypedQuery<Post> query = entityManager.createQuery("from Post", Post.class);
+        model.addAttribute("posts", query.getResultList());
+    }
+
+    @Override
+    public void getPostById(int theId, Model model) {
+        model.addAttribute("post", entityManager.find(Post.class, theId));
     }
 }

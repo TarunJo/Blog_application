@@ -17,29 +17,24 @@ import java.util.List;
 public class BlogController {
     @Autowired
     AppServices appServices;
+
     @GetMapping("/")
     public String blogPage(Model model) {
-        List<Post> posts = appServices.findAllPost();
-        model.addAttribute("posts", posts);
+        appServices.findAllPost(model);
 
         return "blog-page";
     }
 
     @GetMapping("/post{postId}")
     public String viewPost(@PathVariable int postId, Model model) {
-        Post post = appServices.getPostById(postId);
-        model.addAttribute("post", post);
+        appServices.getPostById(postId , model);
 
         return "view-post";
     }
 
     @GetMapping("/newpost")
     public String createPost(Model model) {
-        Post post = new Post();
-        Tag tag = new Tag();
-
-        model.addAttribute("post", post);
-        model.addAttribute("tag", tag);
+        appServices.createModels(model);
 
         return "new-post";
     }
@@ -47,7 +42,30 @@ public class BlogController {
     @PostMapping("/createpost")
     public String postCreation(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag) {
         appServices.addPost(post, tag);
-        return "blog-page";
+
+        return "redirect:/";
     }
 
+    @GetMapping("/editpost{postId}")
+    public String editPost(@PathVariable int postId, Model model) {
+        appServices.editPost(model, postId);
+
+        return "edit-post";
+    }
+
+    @PostMapping("/updatepost")
+    public String updatePost(@ModelAttribute("post") Post post, @ModelAttribute("tags") String tags) {
+        System.out.println(post);
+        System.out.println(tags);
+        appServices.updatePost(post, tags);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/deletepost{postId}")
+    public String deletePost(@PathVariable int postId) {
+        appServices.deletePost(postId);
+
+        return "redirect:/";
+    }
 }

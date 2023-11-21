@@ -20,6 +20,8 @@
             <p th:text = "${post.publishedAt}"></p>
             <p th:text = "${post.excerpt}"></p>
             <a th:href="@{/post{postId}(postId=${post.id})}"><button>View</button></a>
+            <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
+            <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
         </div>
     </div>
 </body>
