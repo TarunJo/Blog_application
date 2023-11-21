@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "posts")
-public class Posts {
+public class Post {
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,9 +16,9 @@ public class Posts {
     private int id;
     @Column(name = "title")
     private String title;
-    @Column(name = "excerpt")
+    @Column(name = "excerpt",length = 1000)
     private String excerpt;
-    @Column(name = "content")
+    @Column(name = "content",columnDefinition = "TEXT")
     private String Content;
     @Column(name = "author")
     private String author;
@@ -32,7 +32,7 @@ public class Posts {
     private Date updatedAt;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "posts",
             cascade = CascadeType.ALL)
-    private List<Comments> comments;
+    private List<Comment> comments;
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.REFRESH, CascadeType.DETACH}
@@ -42,18 +42,18 @@ public class Posts {
             joinColumns = @JoinColumn(name = "post_id"), // field from current class
             inverseJoinColumns=@JoinColumn(name = "tag_id") // field from other class
     )
-    private List<Tags> tags;
+    private List<Tag> tags;
 
     // Constructors.
-    public Posts() {}
+    public Post() {}
 
-    public Posts(String title, String excerpt, String content, String author, boolean isPublished) {
+    public Post(String title, String excerpt, String content, String author) {
         this.title = title;
         this.excerpt = excerpt;
         Content = content;
         this.author = author;
         this.publishedAt = new Date();
-        this.isPublished = isPublished;
+        this.isPublished = true;
         this.createdAt = new Date();
         this.updatedAt = new Date();
     }
@@ -115,23 +115,23 @@ public class Posts {
         this.updatedAt = new Date();
     }
 
-    public List<Comments> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comments> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 
-    public List<Tags> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tags> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
     // add a convenience method
-    public void addTags(Tags theTag) {
+    public void addTags(Tag theTag) {
         if(tags == null) {
             tags = new ArrayList<>();
         }
@@ -139,7 +139,7 @@ public class Posts {
         tags.add(theTag);
     }
 
-    public void  addComment(Comments comment) {
+    public void  addComment(Comment comment) {
         if(comments == null) {
             comments = new ArrayList<>();
         }

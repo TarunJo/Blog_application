@@ -1,5 +1,7 @@
 package com.mountblue.spring.blogApplication;
 
+import com.mountblue.spring.blogApplication.dao.AppDao;
+import com.mountblue.spring.blogApplication.dao.AppDaoImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,9 +15,13 @@ public class BlogApplication {
 	}
 
 	@Bean
-	public CommandLineRunner commandLineRunner() {
+	public CommandLineRunner commandLineRunner(AppDao appDao) {
 		return runner -> {
-			System.out.println("Hello World!");
+//			createPost(appDao);
 		};
+	}
+
+	private void createPost(AppDao appDao) {
+		appDao.addPost();
 	}
 }

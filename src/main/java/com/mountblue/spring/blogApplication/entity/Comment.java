@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "comments")
-public class Comments {
+public class Comment {
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,16 +21,16 @@ public class Comments {
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "posts_id")
-    private Posts posts;
+    private Post posts;
     @Column(name = "created_at")
     private Date createAt;
     @Column(name = "updated_at")
     private Date updatedAt;
 
     // Constructors
-    public Comments() {}
+    public Comment() {}
 
-    public Comments(String name, String email, String comment) {
+    public Comment(String name, String email, String comment) {
         this.name = name;
         this.email = email;
         this.comment = comment;
@@ -87,11 +87,11 @@ public class Comments {
         this.updatedAt = updatedAt;
     }
 
-    public Posts getPosts() {
+    public Post getPosts() {
         return posts;
     }
 
-    public void setPosts(Posts posts) {
+    public void setPosts(Post posts) {
         this.posts = posts;
     }
 

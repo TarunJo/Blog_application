@@ -8,7 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tags")
-public class Tags {
+public class Tag {
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,12 +29,12 @@ public class Tags {
             joinColumns = @JoinColumn(name = "tag_id"), // field from current class
             inverseJoinColumns=@JoinColumn(name = "post_id") // field from other class
     )
-    private List<Posts> posts;
+    private List<Post> posts;
 
     // Constructors
-    public Tags () {}
+    public Tag() {}
 
-    public Tags(String name) {
+    public Tag(String name) {
         this.name = name;
         this.createdAt = new Date();
         this.updatedAt = new Date();
@@ -65,16 +65,16 @@ public class Tags {
         this.updatedAt = updatedAt;
     }
 
-    public List<Posts> getPosts() {
+    public List<Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(List<Posts> posts) {
+    public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
 
     // add a convenience method
-    public void addPost(Posts thePost) {
+    public void addPost(Post thePost) {
         if(posts == null) {
             posts = new ArrayList<>();
         }
