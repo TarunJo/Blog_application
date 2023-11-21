@@ -1,6 +1,8 @@
 package com.mountblue.spring.blogApplication.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,8 +19,10 @@ public class Tag {
     @Column(name = "name")
     private String name;
     @Column(name = "created_at")
+    @CreationTimestamp
     private Date createdAt;
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private Date updatedAt;
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,

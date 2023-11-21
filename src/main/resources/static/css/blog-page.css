@@ -1,0 +1,17 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+#posts {
+    display: grid;
+    grid-template-columns: 30% 30% 30%; /* Three columns with equal width */
+    grid-gap: 20px; /* Adjust the gap between grid items */
+    padding: 20px;
+}
+
+.post {
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #999;
+}

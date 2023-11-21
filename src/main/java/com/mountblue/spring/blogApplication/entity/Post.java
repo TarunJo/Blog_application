@@ -1,6 +1,8 @@
 package com.mountblue.spring.blogApplication.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,24 +21,24 @@ public class Post {
     @Column(name = "excerpt",length = 1000)
     private String excerpt;
     @Column(name = "content",columnDefinition = "TEXT")
-    private String Content;
+    private String content;
     @Column(name = "author")
     private String author;
     @Column(name = "published_at")
+    @CreationTimestamp
     private Date publishedAt;
     @Column(name = "is_published")
     private boolean isPublished;
     @Column(name = "created_at")
+    @CreationTimestamp
     private Date createdAt;
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private Date updatedAt;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "posts",
             cascade = CascadeType.ALL)
     private List<Comment> comments;
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.REFRESH, CascadeType.DETACH}
-    )
+    @ManyToMany()
     @JoinTable(
             name = "post_tags",
             joinColumns = @JoinColumn(name = "post_id"), // field from current class
@@ -50,7 +52,7 @@ public class Post {
     public Post(String title, String excerpt, String content, String author) {
         this.title = title;
         this.excerpt = excerpt;
-        Content = content;
+        this.content = content;
         this.author = author;
         this.publishedAt = new Date();
         this.isPublished = true;
@@ -84,11 +86,11 @@ public class Post {
     }
 
     public String getContent() {
-        return Content;
+        return content;
     }
 
     public void setContent(String content) {
-        Content = content;
+        this.content = content;
     }
 
     public String getAuthor() {
@@ -130,6 +132,11 @@ public class Post {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
+
+    public Date getPublishedAt() {
+        return publishedAt;
+    }
+
     // add a convenience method
     public void addTags(Tag theTag) {
         if(tags == null) {
@@ -155,7 +162,7 @@ public class Post {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", excerpt='" + excerpt + '\'' +
-                ", Content='" + Content + '\'' +
+                ", Content='" + content + '\'' +
                 ", author='" + author + '\'' +
                 ", publishedAt=" + publishedAt +
                 ", isPublished=" + isPublished +

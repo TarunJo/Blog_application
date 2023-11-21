@@ -1,6 +1,8 @@
 package com.mountblue.spring.blogApplication.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -18,13 +20,14 @@ public class Comment {
     private String email;
     @Column(name = "comment")
     private String comment;
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne()
     @JoinColumn(name = "posts_id")
     private Post posts;
     @Column(name = "created_at")
+    @CreationTimestamp
     private Date createAt;
     @Column(name = "updated_at")
+    @UpdateTimestamp
     private Date updatedAt;
 
     // Constructors

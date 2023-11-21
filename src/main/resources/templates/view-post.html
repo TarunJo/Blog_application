@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Blogs</title>
+    <link rel="stylesheet" href="css/blog-page.css">
+</head>
+<body>
+<header>
+    <h1>My Blog Application</h1>
+    <div>
+        <input type="text" placeholder="Search">
+        <a href="#">Login</a>
+    </div>
+    </header>
+    <div th:object = "${post}" class = "post">
+        <h2 th:text = "*{title}"></h2>
+        <p th:text = "*{author}"></p>
+        <p th:text = "*{publishedAt}"></p>
+        <p th:text = "*{content}"></p>
+        <div th:each = "tag: ${post.tags}">
+            <span th:text = "${tag.name}"></span>
+        </div>
+    </div>
+</body>
+</html>
