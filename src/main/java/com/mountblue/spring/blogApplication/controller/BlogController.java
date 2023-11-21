@@ -1,5 +1,6 @@
 package com.mountblue.spring.blogApplication.controller;
 
+import com.mountblue.spring.blogApplication.entity.Comment;
 import com.mountblue.spring.blogApplication.entity.Tag;
 import com.mountblue.spring.blogApplication.services.AppServices;
 import com.mountblue.spring.blogApplication.entity.Post;
@@ -55,8 +56,6 @@ public class BlogController {
 
     @PostMapping("/updatepost")
     public String updatePost(@ModelAttribute("post") Post post, @ModelAttribute("tags") String tags) {
-        System.out.println(post);
-        System.out.println(tags);
         appServices.updatePost(post, tags);
 
         return "redirect:/";
@@ -67,5 +66,12 @@ public class BlogController {
         appServices.deletePost(postId);
 
         return "redirect:/";
+    }
+
+    @PostMapping("/createComment{postId}")
+    public String createComment(@PathVariable int postId, @ModelAttribute("comment") Comment comment) {
+        appServices.createComment(postId, comment);
+
+        return "redirect:/post{postId}";
     }
 }

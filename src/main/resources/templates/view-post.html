@@ -8,7 +8,6 @@
 <header>
     <h1>My Blog Application</h1>
     <div>
-        <input type="text" placeholder="Search">
         <a href="#">Login</a>
     </div>
     </header>
@@ -20,6 +19,26 @@
         <div th:each = "tag: ${post.tags}">
             <span th:text = "${tag.name}"></span>
         </div>
+    </div>
+    <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
+    <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+
+    <div th:each="comment: ${post.comments}">
+        <p th:text="*{comment.name}"></p>
+        <p th:text="*{comment.email}"></p>
+        <p th:text="*{comment.comment}"></p>
+        <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Edit</button></a>
+        <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+        <p>-----------------------------</p>
+    </div>
+
+    <div>
+        <form th:action="@{/createComment{postId}(postId=${post.id})}" method="post" th:object="${comment}">
+            <label for="title">Comment:</label>
+            <input type="text" id="title" name="title" th:field="*{comment}" required>
+
+            <button type="submit">Comment</button>
+        </form>
     </div>
 </body>
 </html>

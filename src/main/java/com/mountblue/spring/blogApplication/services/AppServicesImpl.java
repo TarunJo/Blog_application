@@ -1,5 +1,6 @@
 package com.mountblue.spring.blogApplication.services;
 
+import com.mountblue.spring.blogApplication.entity.Comment;
 import com.mountblue.spring.blogApplication.entity.Post;
 import com.mountblue.spring.blogApplication.entity.Tag;
 import jakarta.persistence.EntityManager;
@@ -11,7 +12,6 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AppServicesImpl implements AppServices {
@@ -127,6 +127,17 @@ public class AppServicesImpl implements AppServices {
     }
 
     @Override
+    @Transactional
+    public void createComment(int postId, Comment comment) {
+        Post post = entityManager.find(Post.class, postId);
+        Comment theComment =  new Comment("Tarun Joshi", "tarun@gmail.com", comment.getComment());
+
+        post.addComment(theComment);
+
+        entityManager.merge(post);
+    }
+
+    @Override
     public void findAllPost(Model model) {
         TypedQuery<Post> query = entityManager.createQuery("from Post", Post.class);
         model.addAttribute("posts", query.getResultList());
@@ -134,6 +145,7 @@ public class AppServicesImpl implements AppServices {
 
     @Override
     public void getPostById(int theId, Model model) {
+        model.addAttribute("comment", new Comment());
         model.addAttribute("post", entityManager.find(Post.class, theId));
     }
 }
