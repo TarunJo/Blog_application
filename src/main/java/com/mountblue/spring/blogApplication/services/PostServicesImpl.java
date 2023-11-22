@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class AppServicesImpl implements AppServices {
+public class PostServicesImpl implements PostServices {
     private EntityManager entityManager;
 
     @Autowired
-    public AppServicesImpl(EntityManager entityManager) {
+    public PostServicesImpl(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
 
@@ -78,7 +78,6 @@ public class AppServicesImpl implements AppServices {
                 for(Tag theTag: tag) {
                     if(theTag.getName().equals(tempTag))
                     {
-                        System.out.println("2nd layer");
                         newPost.addTags(theTag);
                         break;
                     }
@@ -124,17 +123,6 @@ public class AppServicesImpl implements AppServices {
     public void deletePost(int postId) {
         Post post = entityManager.find(Post.class, postId);
         entityManager.remove(post);
-    }
-
-    @Override
-    @Transactional
-    public void createComment(int postId, Comment comment) {
-        Post post = entityManager.find(Post.class, postId);
-        Comment theComment =  new Comment("Tarun Joshi", "tarun@gmail.com", comment.getComment());
-
-        post.addComment(theComment);
-
-        entityManager.merge(post);
     }
 
     @Override

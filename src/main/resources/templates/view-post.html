@@ -28,7 +28,9 @@
         <p th:text="*{comment.email}"></p>
         <p th:text="*{comment.comment}"></p>
         <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Edit</button></a>
-        <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+        <a th:href="@{/deletecomment/{postId}/{commentId}(postId=${post.id}, commentId=${comment.id})}">
+            <button>Delete</button>
+        </a>
         <p>-----------------------------</p>
     </div>
 

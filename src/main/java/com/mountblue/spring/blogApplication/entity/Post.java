@@ -24,12 +24,12 @@ public class Post {
     private String content;
     @Column(name = "author")
     private String author;
-    @Column(name = "published_at")
+    @Column(name = "published_at", updatable = false)
     @CreationTimestamp
     private Date publishedAt;
-    @Column(name = "is_published")
+    @Column(name = "is_published", updatable = false)
     private boolean isPublished;
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private Date createdAt;
     @Column(name = "updated_at")
