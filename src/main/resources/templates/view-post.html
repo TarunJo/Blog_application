@@ -2,56 +2,60 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Blogs</title>
-    <link rel="stylesheet" href="css/blog-post.css">
+    <link rel="stylesheet" th:href="@{/css/view-post.css}">
 </head>
 <body>
 <header>
-    <h1>My Blog Application</h1>
+    <a th:href = "@{/}"><h1>My Blog Application</h1></a>
     <div>
-        <a href="#">Login</a>
+        <a href="#" id = "login">Login</a>
     </div>
 </header>
-<div th:object = "${post}" class = "post">
-    <h2 th:text = "*{title}"></h2>
-    <p th:text = "*{author}"></p>
-    <p th:text = "*{publishedAt}"></p>
-    <p th:text = "*{content}"></p>
-    <div th:each = "tag: ${post.tags}">
-        <span th:text = "${tag.name}"></span>
+
+<div th:object = "${post}" class = "blog">
+    <div class = "post">
+        <p th:text = "*{title}" id = "heading"></p>
+        <p th:text="*{author + ', ' + #dates.format(publishedAt, 'dd/MM/YYYY')}" class = "author"></p><br><br>
+        <p th:text = "*{content}"></p><br><br>
+    </div>
+    <div th:each = "tag: ${post.tags}" class = "tags">
+        <span th:text = "${tag.name}" class = "tag"></span>
+    </div>
+    <div>
+        <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
+        <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
     </div>
 </div>
-<a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
-<a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
 
-<div th:each="comment: ${post.comments}">
-    <div th:if = "${commentId != comment.id}">
-        <p th:text="*{comment.name}"></p>
-        <p th:text="*{comment.email}"></p>
-        <p th:text="*{comment.comment}"></p>
-        <a th:href="@{/editcomment/{postId}/{commentId}(postId=${post.id}, commentId=${comment.id})}">
+<p class = "comment-heading">Comments</p>
+<div th:each="tempComment: ${post.comments}">
+    <div th:if = "${commentId != tempComment.id}" class = "comment">
+        <p th:text="*{tempComment.name}"></p>
+        <p th:text="*{tempComment.email}" class = "email"></p>
+        <p th:text="*{tempComment.comment}" class = "comment-message"></p>
+        <a th:href="@{/editcomment/{postId}/{commentId}(postId=${post.id}, commentId=${tempComment.id})}">
             <button>Edit</button>
         </a>
-        <a th:href="@{/deletecomment/{postId}/{commentId}(postId=${post.id}, commentId=${comment.id})}">
+        <a th:href="@{/deletecomment/{postId}/{commentId}(postId=${post.id}, commentId=${tempComment.id})}">
             <button>Delete</button>
         </a>
-        <p>-----------------------------</p>
     </div>
-    <div th:if = "${commentId == comment.id}">
-        <form th:object="${comment}" th:action="@{/updatecomment/{postId}/{commentId}(postId=${post.id}, commentId=${comment.id})}" method="GET">
+    <div th:if = "${commentId == tempComment.id}" class = "comment">
+        <form th:object="${tempComment}" th:action="@{/updatecomment/{postId}/{commentId}(postId=${post.id}, commentId=${tempComment.id})}" method="GET">
             <p th:text="*{name}"></p>
             <p th:text="*{email}"></p>
 
-            <label for="comment">Comment:</label>
-            <input type="text" id="comment" name="editComment" th:value="${comment.comment}" required>
+            <label for="comment">Edit Comment:</label>
+            <input type="text" id="comment" name="editComment" th:value="${tempComment.comment}" required>
 
             <input type="submit" value="Done"/>
-            <p>-----------------------------</p>
         </form>
     </div>
 </div>
 
-<div>
-    <form th:action="@{/createComment{postId}(postId=${post.id})}" method="post" th:object="${comment}">
+<div th:if = "${commentId == null}" class="add-comments">
+    <p class = "comment-heading">Add Comment</p>
+    <form th:action="@{/createComment{postId}(postId=${post.id})}" method="post" th:object="${editComment}">
         <label for="title">Comment:</label>
         <input type="text" id="title" name="title" th:field="*{comment}" required>
 

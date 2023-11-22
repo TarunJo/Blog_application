@@ -2,16 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Blogs</title>
-    <link rel="stylesheet" href="css/blog-page.css">
+    <link rel="stylesheet" href="css/new-post.css">
 </head>
 <body>
     <header>
-        <h1>My Blog Application</h1>
+        <a th:href = "@{/}"><h1>My Blog Application</h1></a>
         <div>
-            <input type="text" placeholder="Search">
-            <a href="#">Login</a>
+            <a href="#"  id = "login">Login</a>
         </div>
     </header>
+
     <form th:action="@{/createpost}" method="post" th:object="${post}">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" th:field="*{title}" required>

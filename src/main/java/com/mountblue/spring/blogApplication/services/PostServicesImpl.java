@@ -3,9 +3,10 @@ package com.mountblue.spring.blogApplication.services;
 import com.mountblue.spring.blogApplication.entity.Comment;
 import com.mountblue.spring.blogApplication.entity.Post;
 import com.mountblue.spring.blogApplication.entity.Tag;
+import com.mountblue.spring.blogApplication.repository.CommentRepository;
+import com.mountblue.spring.blogApplication.repository.PostRepository;
+import com.mountblue.spring.blogApplication.repository.TagsRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -15,19 +16,21 @@ import java.util.List;
 
 @Service
 public class PostServicesImpl implements PostServices {
-    private EntityManager entityManager;
-
+    private CommentRepository commentRepository;
+    private PostRepository postRepository;
+    private TagsRepository tagsRepository;
     @Autowired
-    public PostServicesImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public PostServicesImpl(CommentRepository commentRepository,
+                            PostRepository postRepository, TagsRepository tagsRepository) {
+        this.postRepository = postRepository;
+        this.commentRepository = commentRepository;
+        this.tagsRepository = tagsRepository;
     }
 
     @Override
-    @Transactional
     public void addPost(Post post, Tag tag) {
         Post thePost = new Post(post.getTitle(), post.getExcerpt(), post.getContent(), post.getAuthor());
-        TypedQuery<Tag> query = entityManager.createQuery("from Tag", Tag.class);
-        List<Tag> tags = query.getResultList();
+        List<Tag> tags = tagsRepository.findAll();
         List<String> tagName = new ArrayList<>();
 
         for(Tag tempTag: tags) {
@@ -49,22 +52,20 @@ public class PostServicesImpl implements PostServices {
             }
             else {
                 Tag createTag = new Tag(tempTag);
-                entityManager.persist(createTag);
+                tagsRepository.save(createTag);
                 thePost.addTags(createTag);
             }
         }
 
-        entityManager.persist(thePost);
+        postRepository.save(thePost);
     }
 
     @Override
-    @Transactional
     public void updatePost(Post post, String tags) {
         Post newPost = new Post(post.getTitle(), post.getExcerpt(), post.getContent(), post.getAuthor());
         newPost.setId(post.getId());
 
-        TypedQuery<Tag> query = entityManager.createQuery("from Tag", Tag.class);
-        List<Tag> tag = query.getResultList();
+        List<Tag> tag = tagsRepository.findAll();
         List<String> tagName = new ArrayList<>();
 
         for(Tag tempTag: tag) {
@@ -85,12 +86,12 @@ public class PostServicesImpl implements PostServices {
             }
             else {
                 Tag createTag = new Tag(tempTag);
-                entityManager.persist(createTag);
+                tagsRepository.save(createTag);
                 newPost.addTags(createTag);
             }
         }
 
-        entityManager.merge(newPost);
+        postRepository.save(newPost);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class PostServicesImpl implements PostServices {
 
     @Override
     public void editPost(Model model, int postId) {
-        Post post = entityManager.find(Post.class, postId);
+        Post post = postRepository.findById(postId).get();
         model.addAttribute("post", post);
 
         List<Tag> tags = post.getTags();
@@ -115,25 +116,22 @@ public class PostServicesImpl implements PostServices {
             theTags = theTags.substring(0, theTags.length()-2);
         }
 
-        model.addAttribute("tags", theTags);
+        model.addAttribute("theTags", theTags);
     }
 
     @Override
-    @Transactional
     public void deletePost(int postId) {
-        Post post = entityManager.find(Post.class, postId);
-        entityManager.remove(post);
+        postRepository.deleteById(postId);
     }
 
     @Override
     public void findAllPost(Model model) {
-        TypedQuery<Post> query = entityManager.createQuery("from Post", Post.class);
-        model.addAttribute("posts", query.getResultList());
+        model.addAttribute("posts", postRepository.findAll());
     }
 
     @Override
     public void getPostById(int theId, Model model) {
-        model.addAttribute("comment", new Comment());
-        model.addAttribute("post", entityManager.find(Post.class, theId));
+        model.addAttribute("editComment", new Comment());
+        model.addAttribute("post", postRepository.findById(theId).get());
     }
 }

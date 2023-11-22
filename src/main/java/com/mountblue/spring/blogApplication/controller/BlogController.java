@@ -54,7 +54,7 @@ public class BlogController {
     }
 
     @PostMapping("/updatepost")
-    public String updatePost(@ModelAttribute("post") Post post, @ModelAttribute("tags") String tags) {
+    public String updatePost(@ModelAttribute("post") Post post, @ModelAttribute("tg") String tags) {
         postServices.updatePost(post, tags);
 
         return "redirect:/";
@@ -68,8 +68,9 @@ public class BlogController {
     }
 
     @PostMapping("/createComment{postId}")
-    public String createComment(@PathVariable int postId, @ModelAttribute("comment") Comment comment) {
+    public String createComment(@PathVariable int postId, @ModelAttribute("editComment") Comment comment) {
         commentServices.createComment(postId, comment);
+        System.out.println("hello");
 
         return "redirect:/post{postId}";
     }
@@ -89,9 +90,8 @@ public class BlogController {
     }
 
     @GetMapping("/updatecomment/{postId}/{commentId}")
-    public String updateComment(@PathVariable int postId, @PathVariable int commentId, @ModelAttribute("editComment") String comment) {
+    public String updateComment(@PathVariable int postId, @PathVariable int commentId, @ModelAttribute("editComment") String comment, @ModelAttribute("comment") Comment cmt) {
         commentServices.updateComment(commentId, comment);
-        System.out.println(comment);
 
         return "redirect:/post{postId}";
     }

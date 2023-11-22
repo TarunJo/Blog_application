@@ -1,11 +1,31 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+    background-color: #fff; /* White background */
+    color: #000; /* Black text color */
+    font-family: Arial, sans-serif; /* Choose a suitable font */
+    margin: 0; /* Remove default margin */
+}
+
+header {
+    background-color: #000; /* Black header background */
+    color: #fff; /* White text color for header */
+    padding: 10px;
+    display: flex;
+    justify-content: space-between; /* Align items to the left and right */
+    align-items: center;
+}
+
+header h1 {
+    margin: 0; /* Remove margin for h1 */
+}
+
+input[type="text"] {
+    border: 1px solid #000; /* Black border for input fields */
+    padding: 5px;
 }
 
 #posts {
     display: grid;
-    grid-template-columns: 30% 30% 30%; /* Three columns with equal width */
+    grid-template-columns: 32.3% 32.3% 32.3%; /* Three columns with equal width */
     grid-gap: 20px; /* Adjust the gap between grid items */
     padding: 20px;
 }
@@ -14,4 +34,54 @@ body {
     padding: 20px;
     text-align: center;
     border: 1px solid #999;
+}
+
+button {
+    background-color: #000; /* Black button background */
+    color: #fff; /* White text color for buttons */
+    padding: 8px 15px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #333; /* Darker shade on hover */
+}
+
+.post button {
+    background-color: #555; /* Darker background for buttons within posts */
+}
+
+.post button:hover {
+    background-color: #777; /* Darker shade on hover for post buttons */
+}
+
+#addPost {
+    color: #000; /* Black text color for links */
+    text-decoration: none;
+}
+
+#addPost:hover {
+    color: #333; /* Darker shade on hover for links */
+}
+
+#search {
+    border-radius: 20px;
+}
+
+#buttons {
+    height: 40px;
+    text-align: right;
+}
+
+#login {
+    color: #fff; /* Black text color for links */
+    text-decoration: none;
+    margin: 0px 20px;
+}
+
+a {
+    text-decoration: none;
+    color: white;
 }

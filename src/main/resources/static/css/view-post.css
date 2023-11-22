@@ -1,0 +1,134 @@
+body {
+    background-color: #fff; /* White background */
+    color: #000; /* Black text color */
+    font-family: Arial, sans-serif; /* Choose a suitable font */
+    margin: 0; /* Remove default margin */
+}
+
+header {
+    background-color: #000; /* Black header background */
+    color: #fff; /* White text color for header */
+    padding: 10px;
+    display: flex;
+    justify-content: space-between; /* Align items to the left and right */
+    align-items: center;
+}
+
+header h1 {
+    margin: 0; /* Remove margin for h1 */
+}
+
+a {
+    color: #fff; /* White text color for links */
+    text-decoration: none;
+}
+
+#login {
+    padding: 8px 15px;
+    background-color: #000; /* Black button background */
+    color: #fff; /* White text color for link */
+    border: none;
+    cursor: pointer;
+}
+
+.blog {
+    padding-bottom: 20px;
+    border: 1px solid #999;
+    margin: 20px;
+    text-align: center;
+}
+
+.post {
+    margin-bottom: 20px;
+    padding: 0px 40px;
+}
+
+#about-post {
+    display: flex;
+    align-items: center;
+}
+
+#about-post p {
+    margin: 0;
+}
+
+button {
+    background-color: #000; /* Black button background */
+    color: #fff; /* White text color for buttons */
+    padding: 8px 15px;
+    margin: 30px 20px 0px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #333; /* Darker shade on hover for buttons */
+}
+
+input[type="text"] {
+    border: 1px solid #000; /* Black border for input fields */
+    padding: 5px;
+}
+
+input[type="submit"] {
+    background-color: #000; /* Black button background */
+    color: #fff; /* White text color for submit button */
+    padding: 8px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #333; /* Darker shade on hover for submit button */
+}
+
+.comment-heading {
+    margin: 0; /* Remove margin for paragraphs */
+    text-align: center;
+    font-weight: bolder;
+    font-size: x-large;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #000; /* Black border for horizontal rule */
+}
+
+#heading {
+    font-size: xxx-large;
+    font-weight: bolder;
+}
+
+.tags {
+    display: inline-block; /* Set display to inline-block */
+    margin-right: 5px; /* Optional: Add some spacing between tags */
+}
+
+.tag {
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.add-comments {
+    text-align: center;
+    border-top: 2px solid black;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+.comment {
+    text-align: center;
+    padding: 20px 0px;
+    border: 1px solid black;
+    margin: 20px;
+}
+
+.author, .comment-message    {
+    font-size: large;
+    font-weight: bolder;
+}
+
+.email {
+    font-size: small;
+}

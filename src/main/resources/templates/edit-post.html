@@ -2,14 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Blogs</title>
-    <link rel="stylesheet" href="css/blog-page.css">
+    <link rel="stylesheet" href="css/new-post.css">
 </head>
 <body>
 <header>
-    <h1>My Blog Application</h1>
+    <a th:href = "@{/}"><h1>My Blog Application</h1></a>
     <div>
-        <input type="text" placeholder="Search">
-        <a href="#">Login</a>
+        <a href="#" id = "login">Login</a>
     </div>
 </header>
 <form th:action="@{/updatepost}" method="post" th:object="${post}">
@@ -27,8 +26,8 @@
     <label for="author">Author:</label>
     <input type="text" id="author" name="author" th:field="*{author}" required>
 
-    <label for="tags">Tags (comma-separated):</label>
-    <input type="text" id="tags" name="tags" th:value="${tags}" required>
+    <label for="tg">Tags (comma-separated):</label>
+    <input type="text" id="tg" name="tg" th:value="${theTags}" required>
 
     <button type="submit">Update Post</button>
 </form>
