@@ -8,10 +8,7 @@ import com.mountblue.spring.blogApplication.entity.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class BlogController {
@@ -30,7 +27,7 @@ public class BlogController {
 
     @GetMapping("/post{postId}")
     public String viewPost(@PathVariable int postId, Model model) {
-        postServices.getPostById(postId , model);
+        postServices.getPostById(postId, model);
 
         return "view-post";
     }
@@ -80,6 +77,21 @@ public class BlogController {
     @GetMapping("/deletecomment/{postId}/{commentId}")
     public String deleteComment(@PathVariable int postId, @PathVariable int commentId) {
         commentServices.deleteComment(commentId);
+
+        return "redirect:/post{postId}";
+    }
+
+    @GetMapping("/editcomment/{postId}/{commentId}")
+    public String editComment(@PathVariable int postId, @PathVariable int commentId, Model model) {
+        commentServices.editComment(postId, commentId, model);
+
+        return "view-post";
+    }
+
+    @GetMapping("/updatecomment/{postId}/{commentId}")
+    public String updateComment(@PathVariable int postId, @PathVariable int commentId, @ModelAttribute("editComment") String comment) {
+        commentServices.updateComment(commentId, comment);
+        System.out.println(comment);
 
         return "redirect:/post{postId}";
     }

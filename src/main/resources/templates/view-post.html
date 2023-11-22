@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Blogs</title>
-    <link rel="stylesheet" href="css/blog-page.css">
+    <link rel="stylesheet" href="css/blog-post.css">
 </head>
 <body>
 <header>
@@ -10,37 +10,53 @@
     <div>
         <a href="#">Login</a>
     </div>
-    </header>
-    <div th:object = "${post}" class = "post">
-        <h2 th:text = "*{title}"></h2>
-        <p th:text = "*{author}"></p>
-        <p th:text = "*{publishedAt}"></p>
-        <p th:text = "*{content}"></p>
-        <div th:each = "tag: ${post.tags}">
-            <span th:text = "${tag.name}"></span>
-        </div>
+</header>
+<div th:object = "${post}" class = "post">
+    <h2 th:text = "*{title}"></h2>
+    <p th:text = "*{author}"></p>
+    <p th:text = "*{publishedAt}"></p>
+    <p th:text = "*{content}"></p>
+    <div th:each = "tag: ${post.tags}">
+        <span th:text = "${tag.name}"></span>
     </div>
-    <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
-    <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+</div>
+<a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
+<a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
 
-    <div th:each="comment: ${post.comments}">
+<div th:each="comment: ${post.comments}">
+    <div th:if = "${commentId != comment.id}">
         <p th:text="*{comment.name}"></p>
         <p th:text="*{comment.email}"></p>
         <p th:text="*{comment.comment}"></p>
-        <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Edit</button></a>
+        <a th:href="@{/editcomment/{postId}/{commentId}(postId=${post.id}, commentId=${comment.id})}">
+            <button>Edit</button>
+        </a>
         <a th:href="@{/deletecomment/{postId}/{commentId}(postId=${post.id}, commentId=${comment.id})}">
             <button>Delete</button>
         </a>
         <p>-----------------------------</p>
     </div>
+    <div th:if = "${commentId == comment.id}">
+        <form th:object="${comment}" th:action="@{/updatecomment/{postId}/{commentId}(postId=${post.id}, commentId=${comment.id})}" method="GET">
+            <p th:text="*{name}"></p>
+            <p th:text="*{email}"></p>
 
-    <div>
-        <form th:action="@{/createComment{postId}(postId=${post.id})}" method="post" th:object="${comment}">
-            <label for="title">Comment:</label>
-            <input type="text" id="title" name="title" th:field="*{comment}" required>
+            <label for="comment">Comment:</label>
+            <input type="text" id="comment" name="editComment" th:value="${comment.comment}" required>
 
-            <button type="submit">Comment</button>
+            <input type="submit" value="Done"/>
+            <p>-----------------------------</p>
         </form>
     </div>
+</div>
+
+<div>
+    <form th:action="@{/createComment{postId}(postId=${post.id})}" method="post" th:object="${comment}">
+        <label for="title">Comment:</label>
+        <input type="text" id="title" name="title" th:field="*{comment}" required>
+
+        <button type="submit">Comment</button>
+    </form>
+</div>
 </body>
 </html>

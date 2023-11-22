@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 @Service
 public class CommentServicesImpl implements CommentServices {
@@ -31,5 +32,21 @@ public class CommentServicesImpl implements CommentServices {
     public void deleteComment(int commentId) {
         Comment comment = entityManager.find(Comment.class, commentId);
         entityManager.remove(comment);
+    }
+
+    @Override
+    public void editComment(int theId, int commentId, Model model) {
+        model.addAttribute("comment", new Comment());
+        model.addAttribute("commentId", commentId);
+        model.addAttribute("post", entityManager.find(Post.class, theId));
+    }
+
+    @Override
+    @Transactional
+    public void updateComment(int commentId, String commentString) {
+        Comment comment = entityManager.find(Comment.class, commentId);
+        comment.setComment(commentString);
+
+        entityManager.merge(comment);
     }
 }
