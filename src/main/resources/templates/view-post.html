@@ -41,7 +41,7 @@
         </a>
     </div>
     <div th:if = "${commentId == tempComment.id}" class = "comment">
-        <form th:object="${tempComment}" th:action="@{/updatecomment/{postId}/{commentId}(postId=${post.id}, commentId=${tempComment.id})}" method="GET">
+        <form th:object="${tempComment}" th:action="@{/updatecomment/{postId}/{commentId}(postId=${post.id}, commentId=${tempComment.id})}" method="POST">
             <p th:text="*{name}"></p>
             <p th:text="*{email}"></p>
 

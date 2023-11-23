@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import java.util.List;
 
 public interface PostServices {
-    void findAllPost(Model model, List<Post> post, String defaultOption);
+    void findAllPost(Model model, String defaultOption, Integer page);
 
     void getPostById(int theId, Model model);
 
@@ -21,6 +21,4 @@ public interface PostServices {
 
     void deletePost(int postId);
 
-    List<Post> sortByPublishedAtDesc();
-    List<Post> sortByPublishedAtAsc();
 }

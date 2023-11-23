@@ -8,6 +8,9 @@ import com.mountblue.spring.blogApplication.repository.PostRepository;
 import com.mountblue.spring.blogApplication.repository.TagsRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -125,21 +128,32 @@ public class PostServicesImpl implements PostServices {
     }
 
     @Override
-    public List<Post> sortByPublishedAtDesc() {
-        return postRepository.findAllByOrderByPublishedAtDesc();
-    }
+    public void findAllPost(Model model, String defaultOption, Integer page) {
+        if(defaultOption.equals("PublishedAtAsc"))
+        {
+            Pageable pageable = PageRequest.of(page, 6);
+            Page<Post> postPage = postRepository.findAllByOrderByPublishedAtAsc(pageable);
 
-    @Override
-    public List<Post> sortByPublishedAtAsc() {
-        return postRepository.findAllByOrderByPublishedAtAsc();
-    }
+            model.addAttribute("posts", postPage);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", postPage.getTotalPages());
+        }
+        else if(defaultOption.equals("PublishedAtDesc")) {
+            Pageable pageable = PageRequest.of(page, 6);
+            Page<Post> postPage = postRepository.findAllByOrderByPublishedAtDesc(pageable);
 
-    @Override
-    public void findAllPost(Model model, List<Post> post, String defaultOption) {
-        if(post != null)
-            model.addAttribute("posts", post);
-        else
-            model.addAttribute("posts", postRepository.findAll());
+            model.addAttribute("posts", postPage);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", postPage.getTotalPages());
+        }
+        else {
+            Pageable pageable = PageRequest.of(page, 6);
+            Page<Post> postPage = postRepository.findAll(pageable);
+
+            model.addAttribute("posts", postPage);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", postPage.getTotalPages());
+        }
 
         if(defaultOption == null) {
             model.addAttribute("defaultOption", "default");

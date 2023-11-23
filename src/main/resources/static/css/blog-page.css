@@ -104,3 +104,38 @@ option {
 select {
     text-align: center;
 }
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+    margin-top: 20px;
+    position: fixed;
+    bottom: 20px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.pagination a {
+    color: #333;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #ddd;
+}
+
+.pagination a.active {
+    background-color: black;
+    color: white;
+}
+
+.pagination a.disabled {
+    pointer-events: none;
+    color: #ddd;
+    cursor: not-allowed;
+}
