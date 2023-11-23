@@ -9,10 +9,17 @@
         <a th:href = "@{/}"><h1>My Blog Application</h1></a>
         <div>
             <input type="text" placeholder="Search" id = "search">
-            <a href="#" id = "login">Login</a>
+            <a th:href="@{/sorting}" id = "login">Login</a>
         </div>
     </header>
     <div id = "buttons">
+        <form th:action="@{/sorting}" method="get">
+            <select id="dropdown" name="selectedOption" onchange="this.form.submit()">
+                <option value="default" th:selected="${defaultOption eq 'default'}">Sort by</option>
+                <option value="PublishedAtAsc" th:selected="${defaultOption eq 'PublishedAtAsc'}">Published Date (Asc)</option>
+                <option value="PublishedAtDesc" th:selected="${defaultOption eq 'PublishedAtDesc'}">Published Date (Desc)</option>
+            </select>
+        </form>
         <a th:href="@{/newpost}" id = "addPost"><button>Add Post</button></a>
     </div>
     <div id = "posts">

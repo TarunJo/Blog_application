@@ -4,8 +4,10 @@ import com.mountblue.spring.blogApplication.entity.Post;
 import com.mountblue.spring.blogApplication.entity.Tag;
 import org.springframework.ui.Model;
 
+import java.util.List;
+
 public interface PostServices {
-    void findAllPost(Model model);
+    void findAllPost(Model model, List<Post> post, String defaultOption);
 
     void getPostById(int theId, Model model);
 
@@ -18,4 +20,7 @@ public interface PostServices {
     void editPost(Model model, int postId);
 
     void deletePost(int postId);
+
+    List<Post> sortByPublishedAtDesc();
+    List<Post> sortByPublishedAtAsc();
 }

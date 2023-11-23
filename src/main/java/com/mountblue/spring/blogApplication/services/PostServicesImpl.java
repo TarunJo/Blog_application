@@ -125,8 +125,28 @@ public class PostServicesImpl implements PostServices {
     }
 
     @Override
-    public void findAllPost(Model model) {
-        model.addAttribute("posts", postRepository.findAll());
+    public List<Post> sortByPublishedAtDesc() {
+        return postRepository.findAllByOrderByPublishedAtDesc();
+    }
+
+    @Override
+    public List<Post> sortByPublishedAtAsc() {
+        return postRepository.findAllByOrderByPublishedAtAsc();
+    }
+
+    @Override
+    public void findAllPost(Model model, List<Post> post, String defaultOption) {
+        if(post != null)
+            model.addAttribute("posts", post);
+        else
+            model.addAttribute("posts", postRepository.findAll());
+
+        if(defaultOption == null) {
+            model.addAttribute("defaultOption", "default");
+        }
+        else {
+            model.addAttribute("defaultOption", defaultOption);
+        }
     }
 
     @Override

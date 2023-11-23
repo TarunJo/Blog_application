@@ -1,32 +1,32 @@
 body {
-    background-color: #fff; /* White background */
-    color: #000; /* Black text color */
-    font-family: Arial, sans-serif; /* Choose a suitable font */
-    margin: 0; /* Remove default margin */
+    background-color: #fff;
+    color: #000;
+    font-family: Arial, sans-serif;
+    margin: 0;
 }
 
 header {
-    background-color: #000; /* Black header background */
-    color: #fff; /* White text color for header */
+    background-color: #000;
+    color: #fff;
     padding: 10px;
     display: flex;
-    justify-content: space-between; /* Align items to the left and right */
+    justify-content: space-between;
     align-items: center;
 }
 
 header h1 {
-    margin: 0; /* Remove margin for h1 */
+    margin: 0;
 }
 
 input[type="text"] {
-    border: 1px solid #000; /* Black border for input fields */
+    border: 1px solid #000;
     padding: 5px;
 }
 
 #posts {
     display: grid;
-    grid-template-columns: 32.3% 32.3% 32.3%; /* Three columns with equal width */
-    grid-gap: 20px; /* Adjust the gap between grid items */
+    grid-template-columns: 32.3% 32.3% 32.3%;
+    grid-gap: 20px;
     padding: 20px;
 }
 
@@ -37,8 +37,8 @@ input[type="text"] {
 }
 
 button {
-    background-color: #000; /* Black button background */
-    color: #fff; /* White text color for buttons */
+    background-color: #000;
+    color: #fff;
     padding: 8px 15px;
     margin: 5px;
     border: none;
@@ -46,24 +46,24 @@ button {
 }
 
 button:hover {
-    background-color: #333; /* Darker shade on hover */
+    background-color: #333;
 }
 
 .post button {
-    background-color: #555; /* Darker background for buttons within posts */
+    background-color: #555;
 }
 
 .post button:hover {
-    background-color: #777; /* Darker shade on hover for post buttons */
+    background-color: #777;
 }
 
 #addPost {
-    color: #000; /* Black text color for links */
+    color: #000;
     text-decoration: none;
 }
 
 #addPost:hover {
-    color: #333; /* Darker shade on hover for links */
+    color: #333;
 }
 
 #search {
@@ -72,11 +72,13 @@ button:hover {
 
 #buttons {
     height: 40px;
-    text-align: right;
+    display: flex;
+    justify-content: right;
+    align-items: center;
 }
 
 #login {
-    color: #fff; /* Black text color for links */
+    color: #fff;
     text-decoration: none;
     margin: 0px 20px;
 }
@@ -84,4 +86,21 @@ button:hover {
 a {
     text-decoration: none;
     color: white;
+}
+
+select {
+    padding: 5px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #000;
+    border: 1px solid #fff;
+}
+
+option {
+    background-color: #000;
+    color: #fff;
+}
+
+select {
+    text-align: center;
 }
