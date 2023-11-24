@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -128,32 +129,38 @@ public class PostServicesImpl implements PostServices {
     }
 
     @Override
-    public void findAllPost(Model model, String defaultOption, Integer page) {
-        if(defaultOption.equals("PublishedAtAsc"))
-        {
-            Pageable pageable = PageRequest.of(page, 6);
-            Page<Post> postPage = postRepository.findAllByOrderByPublishedAtAsc(pageable);
+    public void findAllPost(Model model, String defaultOption, Integer page,
+                            String author,
+                            String publishedDate,
+                            String tags)
+    {
+        author = (author == "" ? null : author);
+        publishedDate = (publishedDate == "" ? null : publishedDate);
+        tags = (tags == "" ? null : tags);
+        defaultOption = (defaultOption == null || defaultOption.equals("default") ? null : defaultOption);
 
-            model.addAttribute("posts", postPage);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", postPage.getTotalPages());
-        }
-        else if(defaultOption.equals("PublishedAtDesc")) {
-            Pageable pageable = PageRequest.of(page, 6);
-            Page<Post> postPage = postRepository.findAllByOrderByPublishedAtDesc(pageable);
+        Pageable pageable = PageRequest.of(page, 6);
+        List<String> tag = new ArrayList<>();
+        model.addAttribute("tagList", tags);
 
-            model.addAttribute("posts", postPage);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", postPage.getTotalPages());
+        if(tags == null) {
+            tag = null;
         }
         else {
-            Pageable pageable = PageRequest.of(page, 6);
-            Page<Post> postPage = postRepository.findAll(pageable);
-
-            model.addAttribute("posts", postPage);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("totalPages", postPage.getTotalPages());
+            for(String tempTag: tags.split(","))
+            {
+                tag.add(tempTag.trim());
+            }
         }
+        System.out.println(tag);
+
+        Page<Post> postPage = postRepository.findAllCustom( author, tag, defaultOption,  pageable);
+
+        model.addAttribute("posts", postPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", postPage.getTotalPages());
+        model.addAttribute("author", author);
+
 
         if(defaultOption == null) {
             model.addAttribute("defaultOption", "default");

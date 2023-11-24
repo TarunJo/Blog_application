@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -27,11 +28,13 @@ public class BlogController {
 
     @GetMapping("/")
     public String blogPage(Model model,
-                           @RequestParam(name = "selectedOption", defaultValue = "default") String option,
-                           @RequestParam(name = "page", defaultValue = "0") Integer page
+                           @RequestParam(name = "selectedOption", required = false) String option,
+                           @RequestParam(name = "page", defaultValue = "0") Integer page,
+                           @RequestParam(name = "author", required = false) String author,
+                           @RequestParam(name = "publishedDate", required = false) String publishedDate,
+                           @RequestParam(name = "tagList", required = false) String tags
     ) {
-        System.out.println(option);
-        postServices.findAllPost(model, option, page);
+        postServices.findAllPost(model, option, page, author, publishedDate, tags);
 
         return "blog-page";
     }
@@ -105,5 +108,10 @@ public class BlogController {
         commentServices.updateComment(commentId, comment);
 
         return "redirect:/post{postId}";
+    }
+
+    @GetMapping("/filter")
+    public String filter() {
+        return "filter";
     }
 }

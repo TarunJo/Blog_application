@@ -12,16 +12,25 @@
             <a href="#" id = "login">Login</a>
         </div>
     </header>
+
     <div id = "buttons">
-        <form th:action="@{/(selectedOption = ${selectedOption})}" method="GET">
+        <form th:action="@{/(selectedOption = ${selectedOption}, author = ${author}, tagList = ${tagList})}" method="GET">
             <select id="dropdown" name="selectedOption" onchange="this.form.submit()">
-                <option value="default" th:selected="${defaultOption eq 'default'}">Sort by</option>
-                <option value="PublishedAtAsc" th:selected="${defaultOption eq 'PublishedAtAsc'}">Published Date (Asc)</option>
-                <option value="PublishedAtDesc" th:selected="${defaultOption eq 'PublishedAtDesc'}">Published Date (Desc)</option>
+                <option value="default" th:selected="${defaultOption eq null}">Sort by</option>
+                <option value="asc" th:selected="${defaultOption eq 'asc'}">
+                    Published Date (Asc)
+                </option>
+                <option value="desc" th:selected="${defaultOption eq 'desc'}">
+                    Published Date (Desc)
+                </option>
             </select>
+            <input type="hidden" name="author" th:value="${author}" th:if="${author != null}" />
+            <input type="hidden" name="tagList" th:value="${tagList}" th:if="${tagList != null}" />
         </form>
-        <a th:href="@{/newpost}" id = "addPost"><button>Add Post</button></a>
+        <a th:href="@{/filter}" class = "addPost"><button>Filter</button></a>
+        <a th:href="@{/newpost}" class = "addPost"><button>Add Post</button></a>
     </div>
+
     <div id = "posts">
         <div th:each = "post: ${posts}" class = "post">
             <h2 th:text = "${post.title}"></h2>
@@ -34,11 +43,14 @@
     </div>
 
     <div class="pagination">
-        <a th:href="@{/(selectedOption = ${defaultOption}, page = ${currentPage - 1})}" th:classappend="${currentPage != 0 ? '': 'disabled'}">&laquo; Prev</a>
-        <a th:classappend = "${currentPage == i-1?'active':''}" th:each="i : ${#numbers.sequence(1, totalPages)}"  th:href="@{/(selectedOption = ${defaultOption}, page=${i-1})}">
+        <a th:href="@{/(selectedOption = ${defaultOption}, page = ${currentPage - 1}, author = ${author},
+        tagList = ${tagList})}" th:classappend="${currentPage != 0 ? '': 'disabled'}">Prev</a>
+        <a th:classappend = "${currentPage == i-1?'active':''}" th:each="i : ${#numbers.sequence(1, totalPages == 0 ? 1 : totalPages)}"
+           th:href="@{/(selectedOption = ${defaultOption}, page=${i-1}, author = ${author}, tagList = ${tagList})}">
             <span th:text="${i}"></span>
         </a>
-        <a th:href="@{/(selectedOption = ${defaultOption}, page = ${currentPage + 1})}" th:classappend="${currentPage+1 != totalPages ? '': 'disabled'}">Next &raquo;</a>
+        <a th:href="@{/(selectedOption = ${defaultOption}, page = ${currentPage + 1}, author = ${author},
+        tagList = ${tagList})}" th:classappend="${currentPage+1 != (totalPages == 0 ? 1 : totalPages) ? '': 'disabled'}">Next</a>
     </div>
 </body>
 </html>

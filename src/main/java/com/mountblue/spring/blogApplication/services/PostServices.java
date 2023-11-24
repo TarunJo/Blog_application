@@ -4,10 +4,14 @@ import com.mountblue.spring.blogApplication.entity.Post;
 import com.mountblue.spring.blogApplication.entity.Tag;
 import org.springframework.ui.Model;
 
+import java.util.Date;
 import java.util.List;
 
 public interface PostServices {
-    void findAllPost(Model model, String defaultOption, Integer page);
+    void findAllPost(Model model, String defaultOption, Integer page,
+                     String author,
+                     String publishedDate,
+                     String tags);
 
     void getPostById(int theId, Model model);
 

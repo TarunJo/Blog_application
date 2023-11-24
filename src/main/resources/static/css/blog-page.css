@@ -57,12 +57,12 @@ button:hover {
     background-color: #777;
 }
 
-#addPost {
+.addPost {
     color: #000;
     text-decoration: none;
 }
 
-#addPost:hover {
+.addPost:hover {
     color: #333;
 }
 
