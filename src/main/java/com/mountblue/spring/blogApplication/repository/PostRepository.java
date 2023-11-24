@@ -16,22 +16,26 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query("SELECT p FROM Post p " +
             "LEFT JOIN p.tags t ON COALESCE(t.name, '') IN :tagsFilter " +
-            "WHERE (:authorFilter IS NULL OR p.author IN :authorFilter) AND " +
-            " (:tagsFilter IS NULL OR t.name IN :tagsFilter) " +
-//            "AND (:publishedDateFilter IS NULL OR p.publishedAt = :publishedDateFilter) " +
+            "WHERE (COALESCE(:authorFilter, '') = '' OR LOWER(p.author) LIKE CONCAT('%', LOWER(:authorFilter), '%')) AND " +
+            "(COALESCE(:tagsFilter, '') = '' OR t.name IN (:tagsFilter)) " +
             "ORDER BY " +
-            "CASE WHEN :sortDirection = 'asc' THEN p.publishedAt END ASC, " +
-            "CASE WHEN :sortDirection = 'desc' THEN p.publishedAt END DESC, " +
-            "CASE WHEN :sortDirection IS NULL THEN p.title END"
+            "CASE " +
+            "   WHEN :sortDirection IS NULL AND :sortField = 'author' THEN p.author END ASC, " +
+            "CASE " +
+            "   WHEN :sortDirection IS NULL AND :sortField = 'title' THEN p.title END ASC, " +
+            "CASE " +
+            "   WHEN :sortDirection IS NULL AND :sortField IS NULL THEN p.publishedAt END ASC, " +
+            "CASE " +
+            "   WHEN :sortDirection = 'desc' AND :sortField = 'author' THEN p.author END DESC, " +
+            "CASE " +
+            "   WHEN :sortDirection = 'desc' AND :sortField = 'title' THEN p.title END DESC, " +
+            "CASE " +
+            "   WHEN :sortDirection = 'desc' AND :sortField IS NULL THEN p.publishedAt END DESC"
     )
     public Page<Post> findAllCustom(
                                     @Param("authorFilter") String authorFilter,
-//                                    @Param("publishedDateFilter") Date publishedDateFilter,
                                     @Param("tagsFilter") List<String> tagsFilter,
                                     @Param("sortDirection") String sortDirection,
+                                    @Param("sortField") String sortField,
                                     Pageable pageable);
-
-    public Page<Post> findAllByOrderByPublishedAtDesc(Pageable pageable);
-
-    public Page<Post> findAllByOrderByPublishedAtAsc(Pageable pageable);
 }

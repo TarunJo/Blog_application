@@ -28,13 +28,13 @@ public class BlogController {
 
     @GetMapping("/")
     public String blogPage(Model model,
-                           @RequestParam(name = "selectedOption", required = false) String option,
+                           @RequestParam(name = "directionOption", required = false) String directionOption,
+                           @RequestParam(name = "fieldOption", required = false) String fieldOption,
                            @RequestParam(name = "page", defaultValue = "0") Integer page,
                            @RequestParam(name = "author", required = false) String author,
-                           @RequestParam(name = "publishedDate", required = false) String publishedDate,
                            @RequestParam(name = "tagList", required = false) String tags
     ) {
-        postServices.findAllPost(model, option, page, author, publishedDate, tags);
+        postServices.findAllPost(model, directionOption, fieldOption, page, author, tags);
 
         return "blog-page";
     }
@@ -104,7 +104,11 @@ public class BlogController {
     }
 
     @PostMapping("/updatecomment/{postId}/{commentId}")
-    public String updateComment(@PathVariable Integer postId, @PathVariable Integer commentId, @ModelAttribute("editComment") String comment, @ModelAttribute("comment") Comment cmt) {
+    public String updateComment(@PathVariable Integer postId,
+                                @PathVariable Integer commentId,
+                                @ModelAttribute("editComment") String comment,
+                                @ModelAttribute("comment") Comment cmt
+    ) {
         commentServices.updateComment(commentId, comment);
 
         return "redirect:/post{postId}";

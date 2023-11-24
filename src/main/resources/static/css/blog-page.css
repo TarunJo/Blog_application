@@ -73,7 +73,7 @@ button:hover {
 #buttons {
     height: 40px;
     display: flex;
-    justify-content: right;
+    justify-content: center;
     align-items: center;
 }
 

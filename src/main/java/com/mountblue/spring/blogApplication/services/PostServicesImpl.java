@@ -33,7 +33,10 @@ public class PostServicesImpl implements PostServices {
 
     @Override
     public void addPost(Post post, Tag tag) {
-        Post thePost = new Post(post.getTitle(), post.getExcerpt(), post.getContent(), post.getAuthor());
+        Post thePost = new Post(post.getTitle().trim(),
+                post.getExcerpt().trim(),
+                post.getContent().trim(),
+                post.getAuthor().trim());
         List<Tag> tags = tagsRepository.findAll();
         List<String> tagName = new ArrayList<>();
 
@@ -66,7 +69,10 @@ public class PostServicesImpl implements PostServices {
 
     @Override
     public void updatePost(Post post, String tags) {
-        Post newPost = new Post(post.getTitle(), post.getExcerpt(), post.getContent(), post.getAuthor());
+        Post newPost = new Post(post.getTitle().trim(),
+                post.getExcerpt().trim(),
+                post.getContent().trim(),
+                post.getAuthor().trim());
         newPost.setId(post.getId());
 
         List<Tag> tag = tagsRepository.findAll();
@@ -129,44 +135,50 @@ public class PostServicesImpl implements PostServices {
     }
 
     @Override
-    public void findAllPost(Model model, String defaultOption, Integer page,
+    public void findAllPost(Model model, String directionOption, String fieldOption,
+                            Integer page,
                             String author,
-                            String publishedDate,
                             String tags)
     {
         author = (author == "" ? null : author);
-        publishedDate = (publishedDate == "" ? null : publishedDate);
         tags = (tags == "" ? null : tags);
-        defaultOption = (defaultOption == null || defaultOption.equals("default") ? null : defaultOption);
+        directionOption = (directionOption == null || directionOption.equals("asc") ? null : directionOption);
+        fieldOption = (fieldOption == null || fieldOption.equals("published") ? null : fieldOption);
 
         Pageable pageable = PageRequest.of(page, 6);
-        List<String> tag = new ArrayList<>();
-        model.addAttribute("tagList", tags);
+        List<String> stringTag = new ArrayList<>();
 
         if(tags == null) {
-            tag = null;
+            stringTag = null;
         }
         else {
             for(String tempTag: tags.split(","))
             {
-                tag.add(tempTag.trim());
+                stringTag.add(tempTag.trim());
             }
         }
-        System.out.println(tag);
+        System.out.println(stringTag);
 
-        Page<Post> postPage = postRepository.findAllCustom( author, tag, defaultOption,  pageable);
+        Page<Post> postPage = postRepository.findAllCustom( author, stringTag, directionOption, fieldOption, pageable);
 
         model.addAttribute("posts", postPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", postPage.getTotalPages());
         model.addAttribute("author", author);
+        model.addAttribute("tagList", tags);
 
-
-        if(defaultOption == null) {
-            model.addAttribute("defaultOption", "default");
+        if(directionOption == null) {
+            model.addAttribute("directionOption", "asc");
         }
         else {
-            model.addAttribute("defaultOption", defaultOption);
+            model.addAttribute("directionOption", directionOption);
+        }
+
+        if(fieldOption == null) {
+            model.addAttribute("fieldOption", "published");
+        }
+        else {
+            model.addAttribute("fieldOption", fieldOption);
         }
     }
 

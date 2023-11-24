@@ -8,9 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 public interface PostServices {
-    void findAllPost(Model model, String defaultOption, Integer page,
+    void findAllPost(Model model, String directionOption, String fieldOption, Integer page,
                      String author,
-                     String publishedDate,
                      String tags);
 
     void getPostById(int theId, Model model);
