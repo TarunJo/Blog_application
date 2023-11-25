@@ -32,9 +32,10 @@ public class BlogController {
                            @RequestParam(name = "fieldOption", required = false) String fieldOption,
                            @RequestParam(name = "page", defaultValue = "0") Integer page,
                            @RequestParam(name = "author", required = false) String author,
-                           @RequestParam(name = "tagList", required = false) String tags
+                           @RequestParam(name = "tagList", required = false) String tags,
+                           @RequestParam(name = "searchValue",required = false) String searchValue
     ) {
-        postServices.findAllPost(model, directionOption, fieldOption, page, author, tags);
+        postServices.findAllPost(model, directionOption, fieldOption, page, author, tags, searchValue);
 
         return "blog-page";
     }

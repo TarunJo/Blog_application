@@ -24,16 +24,31 @@ input[type="text"] {
 }
 
 #posts {
-    display: grid;
-    grid-template-columns: 32.3% 32.3% 32.3%;
-    grid-gap: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     padding: 20px;
 }
 
 .post {
-    padding: 20px;
+    flex: 0 0 calc(32.3% - 20px);
+    box-sizing: border-box;
+    padding: 20px 20px 60px 20px;
     text-align: center;
     border: 1px solid #999;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.tag {
+    border-bottom: 2px solid black;
+    border-top: 2px solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.tags {
+    margin-top: 20px;
 }
 
 button {
@@ -43,6 +58,15 @@ button {
     margin: 5px;
     border: none;
     cursor: pointer;
+}
+
+.aboutPost {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
 }
 
 button:hover {
@@ -67,7 +91,7 @@ button:hover {
 }
 
 #search {
-    border-radius: 20px;
+    border-radius: 5px;
 }
 
 #buttons {

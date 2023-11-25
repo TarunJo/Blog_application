@@ -135,11 +135,14 @@ public class PostServicesImpl implements PostServices {
     }
 
     @Override
-    public void findAllPost(Model model, String directionOption, String fieldOption,
+    public void findAllPost(Model model,
+                            String directionOption,
+                            String fieldOption,
                             Integer page,
                             String author,
-                            String tags)
-    {
+                            String tags,
+                            String searchValue
+    ) {
         author = (author == "" ? null : author);
         tags = (tags == "" ? null : tags);
         directionOption = (directionOption == null || directionOption.equals("asc") ? null : directionOption);
@@ -157,15 +160,21 @@ public class PostServicesImpl implements PostServices {
                 stringTag.add(tempTag.trim());
             }
         }
-        System.out.println(stringTag);
 
-        Page<Post> postPage = postRepository.findAllCustom( author, stringTag, directionOption, fieldOption, pageable);
+        Page<Post> postPage;
+
+        if(searchValue == null)
+            postPage = postRepository.findAllCustom( author, stringTag, directionOption, fieldOption, pageable);
+        else
+            postPage = postRepository.searchByValue(searchValue, pageable);
+        System.out.println(searchValue);
 
         model.addAttribute("posts", postPage);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", postPage.getTotalPages());
         model.addAttribute("author", author);
         model.addAttribute("tagList", tags);
+        model.addAttribute("searchValue", searchValue);
 
         if(directionOption == null) {
             model.addAttribute("directionOption", "asc");

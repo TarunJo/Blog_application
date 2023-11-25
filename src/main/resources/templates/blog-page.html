@@ -7,10 +7,12 @@
 <body>
     <header>
         <a th:href = "@{/}"><h1>My Blog Application</h1></a>
-        <form th:action="@{/}" method="GET">
-            <input type="text" placeholder="Search" id = "search">
+
+        <form th:action="@{/(searchValue = ${searchValue})}" method="GET">
+            <input type="text" th:value = "${searchValue}" name = "searchValue" id = "search" placeholder="Search">
             <button type="submit">Search</button>
         </form>
+
             <a href="#" id = "login">Login</a>
     </header>
 
@@ -63,27 +65,33 @@
             <h2 th:text = "${post.title}"></h2>
             <p th:text = "${post.author + ', ' + #dates.format(post.publishedAt, 'dd/MM/YYYY')}"></p>
             <p th:text = "${post.excerpt}"></p>
-            <a th:href="@{/post{postId}(postId=${post.id})}"><button>View</button></a>
-            <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
-            <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+            <span th:each = "viewTags: ${post.tags}">
+                <span th:text="*{viewTags.name}" class = "tag"></span>
+            </span> <br>
+            <div class = "aboutPost">
+                <a th:href="@{/post{postId}(postId=${post.id})}"><button>View</button></a>
+                <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
+                <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+            </div>
         </div>
     </div>
 
     <div class="pagination">
         <a th:href="@{/(directionOption = ${directionOption}, page = ${currentPage - 1}, author = ${author},
-        tagList = ${tagList}, fieldOption = ${fieldOption})}" th:classappend="${currentPage != 0 ? '': 'disabled'}">
+           tagList = ${tagList}, fieldOption = ${fieldOption}, searchValue = ${searchValue})}"
+           th:classappend="${currentPage != 0 ? '': 'disabled'}">
             Prev
         </a>
 
         <a th:classappend = "${currentPage == i-1?'active':''}"
            th:each="i : ${#numbers.sequence(1, totalPages == 0 ? 1 : totalPages)}"
            th:href="@{/(directionOption = ${directionOption}, page=${i-1}, author = ${author},
-            tagList = ${tagList}, fieldOption = ${fieldOption})}">
+            tagList = ${tagList}, fieldOption = ${fieldOption}, searchValue = ${searchValue})}">
             <span th:text="${i}"></span>
         </a>
 
         <a th:href="@{/(directionOption = ${directionOption}, page = ${currentPage + 1}, author = ${author},
-        tagList = ${tagList}, fieldOption = ${fieldOption})}"
+        tagList = ${tagList}, fieldOption = ${fieldOption}, searchValue = ${searchValue})}"
            th:classappend = "${currentPage+1 != (totalPages == 0 ? 1 : totalPages) ? '': 'disabled'}">Next</a>
     </div>
 </body>

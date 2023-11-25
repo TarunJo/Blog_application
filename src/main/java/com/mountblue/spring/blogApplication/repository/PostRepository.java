@@ -38,4 +38,14 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
                                     @Param("sortDirection") String sortDirection,
                                     @Param("sortField") String sortField,
                                     Pageable pageable);
+
+    @Query("SELECT p FROM Post p " +
+            "LEFT JOIN p.tags t ON COALESCE(t.name, '') IN :searchValue " +
+            "WHERE (COALESCE(:searchValue, '') = '' OR " +
+            "LOWER(p.author) LIKE CONCAT('%', LOWER(:searchValue), '%') OR " +
+            "LOWER(p.title) LIKE CONCAT('%', LOWER(:searchValue), '%') OR " +
+            "LOWER(p.content) LIKE CONCAT('%', LOWER(:searchValue), '%'))"
+//            "LOWER(t.name) LIKE CONCAT('%', LOWER(:searchValue), '%'))"
+    )
+    public Page<Post> searchByValue(@Param("searchValue")String searchValue, Pageable pageable);
 }

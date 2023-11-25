@@ -10,7 +10,7 @@ import java.util.List;
 public interface PostServices {
     void findAllPost(Model model, String directionOption, String fieldOption, Integer page,
                      String author,
-                     String tags);
+                     String tags, String searchValue);
 
     void getPostById(int theId, Model model);
 
