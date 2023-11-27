@@ -4,6 +4,8 @@ import com.mountblue.spring.blogApplication.entity.Post;
 import com.mountblue.spring.blogApplication.entity.Tag;
 import com.mountblue.spring.blogApplication.services.PostServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +24,10 @@ public class PostController {
                            @RequestParam(name = "tagList", required = false) String tags,
                            @RequestParam(name = "searchValue",required = false) String searchValue
     ) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println(authentication);
         postServices.findAllPost(model, directionOption, fieldOption, page, author, tags, searchValue);
 
         return "blog-page";

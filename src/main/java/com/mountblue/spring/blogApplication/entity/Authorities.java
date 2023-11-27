@@ -2,6 +2,9 @@ package com.mountblue.spring.blogApplication.entity;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "authorities")
 public class Authorities {
@@ -9,19 +12,20 @@ public class Authorities {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @ManyToOne()
-    @JoinColumn(name = "user_id")
-    private User userRole;
-    @Column(name = "user_name")
-    private String userName;
+    @ManyToMany()
+    @JoinTable(
+            name = "user_authorities",
+            joinColumns = @JoinColumn(name = "role_id"), // field from current class
+            inverseJoinColumns=@JoinColumn(name = "user_id") // field from other class
+    )
+    private List<User> userRole;
     @Column(name = "user_role")
     private String role;
 
     public Authorities() {}
 
-    public Authorities(String userName, String role) {
-        this.role = role;
-        this.userName = userName;
+    public Authorities(String user_role) {
+        this.role = user_role;
     }
 
     public Integer getId() {
@@ -32,11 +36,11 @@ public class Authorities {
         this.id = id;
     }
 
-    public User getUserRole() {
+    public List<User> getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(User userRole) {
+    public void setUserRole(List<User> userRole) {
         this.userRole = userRole;
     }
 
@@ -48,12 +52,12 @@ public class Authorities {
         this.role = role;
     }
 
-    public String getUserName() {
-        return userName;
-    }
+    public void addUser(User theUser) {
+        if(userRole == null) {
+            userRole = new ArrayList<>();
+        }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+        userRole.add(theUser);
     }
 
     @Override

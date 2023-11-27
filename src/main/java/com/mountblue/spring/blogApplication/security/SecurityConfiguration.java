@@ -31,7 +31,9 @@ public class SecurityConfiguration {
 
         // define query to retrieve the authorities/roles by username
         jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
-                "select user_name, user_role from authorities where user_name = ?"
+                "select u.user_name, a.user_role from users u " +
+                        "LEFT JOIN user_authorities ua on u.id = ua.user_id " +
+                        "LEFT JOIN authorities a on ua.role_id = a.id where u.user_name = ?"
         );
 
         return jdbcUserDetailsManager;
@@ -57,7 +59,6 @@ public class SecurityConfiguration {
                 )
                 .logout(logout -> logout.permitAll()
                 );
-
 
         return http.build();
     }

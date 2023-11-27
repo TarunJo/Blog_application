@@ -28,7 +28,8 @@
         <div th:each = "tag: ${post.tags}" class = "tags">
             <span th:text = "${tag.name}" class = "tag"></span>
         </div><br>
-        <span th:if = "${#authentication.principal.username == post.author}">
+        <span th:if = "${#authentication.principal.username == post.author ||
+                        #authorization.expression('hasRole(''ROLE_admin'')')}">
             <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
             <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
         </span>
@@ -43,7 +44,8 @@
             <p th:text="*{tempComment.comment}" class = "comment-message"></p>
 
             <span th:if = "${#strings.toUpperCase(#authentication.principal.username)
-                                                                      == #strings.toUpperCase(tempComment.name)}">
+                           == #strings.toUpperCase(tempComment.name) ||
+                           #authorization.expression('hasRole(''ROLE_admin'')')}">
             <a th:href="@{/editcomment/{postId}/{commentId}(postId=${post.id}, commentId=${tempComment.id})}">
                 <button>Edit</button>
             </a>

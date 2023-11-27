@@ -23,7 +23,7 @@
 
         <label for="author">Author:</label>
         <input type="text" id="author" name="author"
-               th:value="${#strings.toUpperCase(#authentication.principal.username)}" disabled>
+               th:value="${#strings.toUpperCase(post.author)}" disabled>
 
         <label for="tg">Tags (comma-separated):</label>
         <input type="text" id="tg" name="tg" th:value="${theTags}" required>

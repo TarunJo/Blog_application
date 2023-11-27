@@ -33,8 +33,12 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost",
             cascade = CascadeType.ALL)
     private List<Post> posts;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userRole",
-            cascade = CascadeType.ALL)
+    @ManyToMany()
+    @JoinTable(
+            name = "user_authorities",
+            joinColumns = @JoinColumn(name = "user_id"), // field from current class
+            inverseJoinColumns=@JoinColumn(name = "role_id") // field from other class
+    )
     private List<Authorities> authorities;
 
     // Constructors

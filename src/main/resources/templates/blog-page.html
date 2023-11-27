@@ -78,7 +78,8 @@
             <div class = "aboutPost">
                 <a th:href="@{/post{postId}(postId=${post.id})}"><button>View</button></a>
 
-                <span th:if = "${#authentication.principal.username == post.author}">
+                <span th:if = "${#authentication.principal.username == post.author ||
+                #authorization.expression('hasRole(''ROLE_admin'')')}">
                     <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
                     <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
                 </span>

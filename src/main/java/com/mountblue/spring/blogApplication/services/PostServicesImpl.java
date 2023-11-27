@@ -36,6 +36,8 @@ public class PostServicesImpl implements PostServices {
     public void addPost(Post post, Tag tag) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        System.out.println(authentication);
+
         Post thePost = new Post(post.getTitle().trim(),
                 post.getExcerpt().trim(),
                 post.getContent().trim(), authentication.getName());
