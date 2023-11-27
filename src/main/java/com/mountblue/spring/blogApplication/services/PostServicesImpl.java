@@ -6,11 +6,12 @@ import com.mountblue.spring.blogApplication.entity.Tag;
 import com.mountblue.spring.blogApplication.repository.CommentRepository;
 import com.mountblue.spring.blogApplication.repository.PostRepository;
 import com.mountblue.spring.blogApplication.repository.TagsRepository;
-import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -33,10 +34,11 @@ public class PostServicesImpl implements PostServices {
 
     @Override
     public void addPost(Post post, Tag tag) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         Post thePost = new Post(post.getTitle().trim(),
                 post.getExcerpt().trim(),
-                post.getContent().trim(),
-                post.getAuthor().trim());
+                post.getContent().trim(), authentication.getName());
         List<Tag> tags = tagsRepository.findAll();
         List<String> tagName = new ArrayList<>();
 
@@ -105,7 +107,7 @@ public class PostServicesImpl implements PostServices {
     }
 
     @Override
-    public void createModels(Model model) {
+    public void createPost(Model model) {
         model.addAttribute("post", new Post());
         model.addAttribute("tag", new Tag());
     }
@@ -143,6 +145,7 @@ public class PostServicesImpl implements PostServices {
                             String tags,
                             String searchValue
     ) {
+
         author = (author == "" ? null : author);
         tags = (tags == "" ? null : tags);
         directionOption = (directionOption == null || directionOption.equals("asc") ? null : directionOption);
@@ -167,7 +170,6 @@ public class PostServicesImpl implements PostServices {
             postPage = postRepository.findAllCustom( author, stringTag, directionOption, fieldOption, pageable);
         else
             postPage = postRepository.searchByValue(searchValue, pageable);
-        System.out.println(searchValue);
 
         model.addAttribute("posts", postPage);
         model.addAttribute("currentPage", page);
@@ -175,6 +177,8 @@ public class PostServicesImpl implements PostServices {
         model.addAttribute("author", author);
         model.addAttribute("tagList", tags);
         model.addAttribute("searchValue", searchValue);
+
+
 
         if(directionOption == null) {
             model.addAttribute("directionOption", "asc");

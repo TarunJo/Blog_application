@@ -23,6 +23,9 @@ public class Comment {
     @ManyToOne()
     @JoinColumn(name = "posts_id")
     private Post posts;
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private User userComment;
     @Column(name = "created_at")
     @CreationTimestamp
     private Date createAt;
@@ -96,6 +99,14 @@ public class Comment {
 
     public void setPosts(Post posts) {
         this.posts = posts;
+    }
+
+    public User getUserComment() {
+        return userComment;
+    }
+
+    public void setUserComment(User user_comment) {
+        this.userComment = user_comment;
     }
 
     // toString Method

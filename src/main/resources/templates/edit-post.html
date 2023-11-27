@@ -7,9 +7,6 @@
 <body>
     <header>
         <a th:href = "@{/}"><h1>My Blog Application</h1></a>
-        <div>
-            <a href="#" id = "login">Login</a>
-        </div>
     </header>
 
     <form th:action="@{/updatepost}" method="post" th:object="${post}">
@@ -25,7 +22,8 @@
         <textarea id="content" name="content" th:field="*{content}" rows="6" required></textarea>
 
         <label for="author">Author:</label>
-        <input type="text" id="author" name="author" th:field="*{author}" required>
+        <input type="text" id="author" name="author"
+               th:value="${#strings.toUpperCase(#authentication.principal.username)}" disabled>
 
         <label for="tg">Tags (comma-separated):</label>
         <input type="text" id="tg" name="tg" th:value="${theTags}" required>

@@ -7,24 +7,31 @@
 <body>
     <header>
         <a th:href = "@{/}"><h1>My Blog Application</h1></a>
-        <div>
-            <a href="#" id = "login">Login</a>
-        </div>
+
+        <form th:action="@{/(searchValue = ${searchValue})}" method="GET">
+            <input type="text" th:value = "${searchValue}" name = "searchValue" id = "search" placeholder="Search">
+            <button type="submit">Search</button>
+        </form>
+
+        <span th:text="${#strings.toUpperCase(#authentication.principal.username)}"></span>
+        <form th:action = "@{/logout}" method="POST">
+            <input type="submit" value="Logout" />
+        </form>
     </header>
 
     <div th:object = "${post}" class = "blog">
         <div class = "post">
             <p th:text = "*{title}" id = "heading"></p>
-            <p th:text="*{author + ', ' + #dates.format(publishedAt, 'dd/MM/YYYY')}" class = "author"></p><br><br>
+            <p th:text="*{#strings.toUpperCase(author) + ', ' + #dates.format(publishedAt, 'dd/MM/YYYY')}" class = "author"></p><br><br>
             <p th:text = "*{content}"></p><br><br>
         </div>
         <div th:each = "tag: ${post.tags}" class = "tags">
             <span th:text = "${tag.name}" class = "tag"></span>
-        </div>
-        <div>
+        </div><br>
+        <span th:if = "${#authentication.principal.username == post.author}">
             <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
             <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
-        </div>
+        </span>
     </div>
 
     <p class = "comment-heading">Comments</p>
@@ -34,12 +41,16 @@
             <p th:text="*{tempComment.name}"></p>
             <p th:text="*{tempComment.email}" class = "email"></p>
             <p th:text="*{tempComment.comment}" class = "comment-message"></p>
+
+            <span th:if = "${#strings.toUpperCase(#authentication.principal.username)
+                                                                      == #strings.toUpperCase(tempComment.name)}">
             <a th:href="@{/editcomment/{postId}/{commentId}(postId=${post.id}, commentId=${tempComment.id})}">
                 <button>Edit</button>
             </a>
             <a th:href="@{/deletecomment/{postId}/{commentId}(postId=${post.id}, commentId=${tempComment.id})}">
                 <button>Delete</button>
             </a>
+            </span>
         </div>
 
         <div th:if = "${commentId == tempComment.id}" class = "comment">

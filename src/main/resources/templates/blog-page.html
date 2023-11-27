@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymleaf.org/extras/spring-security">
 <head>
     <title>Blogs</title>
     <link rel="stylesheet" href="css/blog-page.css">
@@ -13,7 +14,11 @@
             <button type="submit">Search</button>
         </form>
 
-            <a href="#" id = "login">Login</a>
+        <span th:text="${#strings.toUpperCase(#authentication.principal.username)}"></span>
+        <form th:action = "@{/logout}" method="POST" >
+            <button value="Logout" class = "logout-button">Logout</button>
+        </form>
+
     </header>
 
     <div id = "buttons">
@@ -49,6 +54,7 @@
                     Descending
                 </option>
             </select>
+
             <input type="hidden" name="author" th:value="${author}" th:if="${author != null}" />
             <input type="hidden" name="tagList" th:value="${tagList}" th:if="${tagList != null}" />
         </form>
@@ -57,21 +63,25 @@
             <button type="submit">Clear</button>
         </form>
 
-        <a th:href="@{/newpost}" class = "addPost"><button>Add Post</button></a>
+        <a th:href="@{/createpost}" class = "addPost"><button>Add Post</button></a>
     </div>
 
     <div id = "posts">
         <div th:each = "post: ${posts}" class = "post">
             <h2 th:text = "${post.title}"></h2>
-            <p th:text = "${post.author + ', ' + #dates.format(post.publishedAt, 'dd/MM/YYYY')}"></p>
-            <p th:text = "${post.excerpt}"></p>
+            <p th:text = "${#strings.toUpperCase(post.author) + ', ' + #dates.format(post.publishedAt, 'dd/MM/YYYY')}"></p>
+            <p th:text = "${post.excerpt}"></p><br>
             <span th:each = "viewTags: ${post.tags}">
                 <span th:text="*{viewTags.name}" class = "tag"></span>
-            </span> <br>
+            </span> <br><br>
+
             <div class = "aboutPost">
                 <a th:href="@{/post{postId}(postId=${post.id})}"><button>View</button></a>
-                <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
-                <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+
+                <span th:if = "${#authentication.principal.username == post.author}">
+                    <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
+                    <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+                </span>
             </div>
         </div>
     </div>

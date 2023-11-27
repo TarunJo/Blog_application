@@ -38,6 +38,9 @@ public class Post {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "posts",
             cascade = CascadeType.ALL)
     private List<Comment> comments;
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private User userPost;
     @ManyToMany()
     @JoinTable(
             name = "post_tags",
@@ -135,6 +138,14 @@ public class Post {
 
     public Date getPublishedAt() {
         return publishedAt;
+    }
+
+    public User getUserPost() {
+        return userPost;
+    }
+
+    public void setUserPost(User userPost) {
+        this.userPost = userPost;
     }
 
     // add a convenience method

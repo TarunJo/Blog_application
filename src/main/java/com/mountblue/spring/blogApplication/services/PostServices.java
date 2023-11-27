@@ -4,9 +4,6 @@ import com.mountblue.spring.blogApplication.entity.Post;
 import com.mountblue.spring.blogApplication.entity.Tag;
 import org.springframework.ui.Model;
 
-import java.util.Date;
-import java.util.List;
-
 public interface PostServices {
     void findAllPost(Model model, String directionOption, String fieldOption, Integer page,
                      String author,
@@ -18,7 +15,7 @@ public interface PostServices {
 
     void updatePost(Post post, String tags);
 
-    void createModels(Model model);
+    void createPost(Model model);
 
     void editPost(Model model, int postId);
 

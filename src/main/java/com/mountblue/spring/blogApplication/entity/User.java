@@ -1,32 +1,94 @@
 package com.mountblue.spring.blogApplication.entity;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
     // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "name")
-    private String name;
+    @Column(name = "user_name")
+    @NotNull
+    private String userName;
     @Column(name = "email")
+    @NotNull
     private String email;
     @Column(name = "password")
+    @NotNull
     private String password;
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userComment",
+            cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost",
+            cascade = CascadeType.ALL)
+    private List<Post> posts;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userRole",
+            cascade = CascadeType.ALL)
+    private List<Authorities> authorities;
 
     // Constructors
     public User() {}
 
     public User(String name, String email, String password) {
-        this.name = name;
+        this.userName = name;
         this.email = email;
         this.password = password;
+        this.isActive = true;
     }
 
     // Getters and Setters
+
+    public List<Authorities> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authorities> authorities) {
+        this.authorities = authorities;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Post> getPost() {
+        return posts;
+    }
+
+    public void setPost(List<Post> post) {
+        this.posts = post;
+    }
+
     public int getId() {
         return id;
     }
@@ -35,12 +97,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {
@@ -59,12 +121,37 @@ public class User {
         this.password = password;
     }
 
+    // add a convenience method
+    public void addPost(Post thePost) {
+        if(posts == null) {
+            posts = new ArrayList<>();
+        }
+
+        posts.add(thePost);
+    }
+
+    public void addComment(Comment theComment) {
+        if(comments == null) {
+            comments = new ArrayList<>();
+        }
+
+        comments.add(theComment);
+    }
+
+    public void addAuthorities(Authorities theAuthorities) {
+        if(authorities == null) {
+            authorities = new ArrayList<>();
+        }
+
+        authorities.add(theAuthorities);
+    }
+
     // toString Method
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", name='" + userName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 '}';

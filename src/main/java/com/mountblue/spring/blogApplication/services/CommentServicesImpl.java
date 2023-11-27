@@ -2,12 +2,17 @@ package com.mountblue.spring.blogApplication.services;
 
 import com.mountblue.spring.blogApplication.entity.Comment;
 import com.mountblue.spring.blogApplication.entity.Post;
+import com.mountblue.spring.blogApplication.entity.User;
 import com.mountblue.spring.blogApplication.repository.CommentRepository;
 import com.mountblue.spring.blogApplication.repository.PostRepository;
+import com.mountblue.spring.blogApplication.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -18,16 +23,26 @@ import java.util.List;
 public class CommentServicesImpl implements CommentServices {
     private CommentRepository commentRepository;
     private PostRepository postRepository;
+    private UserRepository userRepository;
     @Autowired
-    public CommentServicesImpl(CommentRepository commentRepository, PostRepository postRepository) {
+    public CommentServicesImpl(CommentRepository commentRepository,
+                               PostRepository postRepository,
+                               UserRepository userRepository
+    ) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public void createComment(int postId, Comment comment) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Post post = postRepository.findById(postId).get();
-        Comment theComment =  new Comment("Tarun Joshi", "tarun@gmail.com", comment.getComment());
+        User currentUser = userRepository.findByUserName(authentication.getName());
+        Comment theComment =  new Comment(authentication.getName().toUpperCase(),
+                currentUser.getEmail(),
+                comment.getComment());
+
         post.addComment(theComment);
 
         postRepository.save(post);

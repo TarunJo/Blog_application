@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymleaf.org/extras/spring-security">
 <head>
     <title>Blogs</title>
     <link rel="stylesheet" href="css/new-post.css">
@@ -7,12 +8,9 @@
 <body>
     <header>
         <a th:href = "@{/}"><h1>My Blog Application</h1></a>
-        <div>
-            <a href="#"  id = "login">Login</a>
-        </div>
     </header>
 
-    <form th:action="@{/createpost}" method="post" th:object="${post}">
+    <form th:action="@{/addpost}" method="post" th:object="${post}">
         <label for="title">Title:</label>
         <input type="text" id="title" name="title" th:field="*{title}" required>
 
@@ -23,7 +21,8 @@
         <textarea id="content" name="content" th:field="*{content}" rows="6" required></textarea>
 
         <label for="author">Author:</label>
-        <input type="text" id="author" name="author" th:field="*{author}" required>
+        <input type="text" id="author" name="author"
+               th:value="${#strings.toUpperCase(#authentication.principal.username)}" disabled>
 
         <label for="tags">Tags (comma-separated):</label>
         <input type="text" id="tags" name="tags" th:field="${tag.name}" required>
