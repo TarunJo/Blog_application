@@ -8,30 +8,45 @@
     <header>
         <a th:href = "@{/}"><h1>My Blog Application</h1></a>
 
-        <form th:action="@{/(searchValue = ${searchValue})}" method="GET">
-            <input type="text" th:value = "${searchValue}" name = "searchValue" id = "search" placeholder="Search">
-            <button type="submit">Search</button>
-        </form>
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <span th:text="${#strings.toUpperCase(#authentication.principal.username)}"></span>
+        </span>
 
-        <span th:text="${#strings.toUpperCase(#authentication.principal.username)}"></span>
-        <form th:action = "@{/logout}" method="POST">
-            <input type="submit" value="Logout" />
-        </form>
+        <span th:unless="${#authorization.expression('isAuthenticated()')}">
+            <span>Anonymous</span>
+        </span>
+
+        <div th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action = "@{/logout}" method="POST" >
+                <button value="Logout" class = "logout-button">Logout</button>
+             </form>
+        </div>
+
+        <span th:unless="${#authorization.expression('isAuthenticated()')}">
+            <form th:action = "@{/login}" method="GET" >
+                <button value="Login" class = "logout-button">Login</button>
+             </form>
+        </span>
     </header>
 
     <div th:object = "${post}" class = "blog">
         <div class = "post">
             <p th:text = "*{title}" id = "heading"></p>
-            <p th:text="*{#strings.toUpperCase(author) + ', ' + #dates.format(publishedAt, 'dd/MM/YYYY')}" class = "author"></p><br><br>
+            <p th:text="*{#strings.toUpperCase(author) + ', ' + #dates.format(publishedAt, 'dd/MM/YYYY')}"
+               class = "author"></p><br><br>
             <p th:text = "*{content}"></p><br><br>
         </div>
+
         <div th:each = "tag: ${post.tags}" class = "tags">
             <span th:text = "${tag.name}" class = "tag"></span>
         </div><br>
-        <span th:if = "${#authentication.principal.username == post.author ||
-                        #authorization.expression('hasRole(''ROLE_admin'')')}">
-            <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
-            <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <span th:if = "${#authentication.principal.username == post.author ||
+                            #authorization.expression('hasRole(''ROLE_admin'')')}">
+                <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
+                <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+            </span>
         </span>
     </div>
 
@@ -43,15 +58,19 @@
             <p th:text="*{tempComment.email}" class = "email"></p>
             <p th:text="*{tempComment.comment}" class = "comment-message"></p>
 
-            <span th:if = "${#strings.toUpperCase(#authentication.principal.username)
-                           == #strings.toUpperCase(tempComment.name) ||
-                           #authorization.expression('hasRole(''ROLE_admin'')')}">
-            <a th:href="@{/editcomment/{postId}/{commentId}(postId=${post.id}, commentId=${tempComment.id})}">
-                <button>Edit</button>
-            </a>
-            <a th:href="@{/deletecomment/{postId}/{commentId}(postId=${post.id}, commentId=${tempComment.id})}">
-                <button>Delete</button>
-            </a>
+            <span th:if="${#authorization.expression('isAuthenticated()')}">
+                <span th:if = "${#strings.toUpperCase(#authentication.principal.username)
+                               == #strings.toUpperCase(tempComment.name) ||
+                               #authorization.expression('hasRole(''ROLE_admin'')')}">
+                    <a th:href="@{/editcomment/{postId}/{commentId}(postId=${post.id},
+                     commentId=${tempComment.id})}">
+                        <button>Edit</button>
+                    </a>
+                    <a th:href="@{/deletecomment/{postId}/{commentId}(postId=${post.id},
+                     commentId=${tempComment.id})}">
+                        <button>Delete</button>
+                    </a>
+                </span>
             </span>
         </div>
 
@@ -69,14 +88,16 @@
         </div>
     </div>
 
-    <div th:if = "${commentId == null}" class="add-comments">
-        <p class = "comment-heading">Add Comment</p>
-        <form th:action="@{/createComment{postId}(postId=${post.id})}" method="post" th:object="${editComment}">
-            <label for="title">Comment:</label>
-            <input type="text" id="title" name="title" th:field="*{comment}" required>
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
+        <div th:if = "${commentId == null}" class="add-comments">
+            <p class = "comment-heading">Add Comment</p>
+            <form th:action="@{/createComment{postId}(postId=${post.id})}" method="post" th:object="${editComment}">
+                <label for="title">Comment:</label>
+                <input type="text" id="title" name="title" th:field="*{comment}" required>
 
-            <button type="submit">Comment</button>
-        </form>
-    </div>
+                <button type="submit">Comment</button>
+            </form>
+        </div>
+    </span>
 </body>
 </html>

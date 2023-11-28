@@ -132,3 +132,8 @@ hr {
 .email {
     font-size: small;
 }
+
+.logout-button {
+    padding-top: 0px;
+    margin-top: 10px;
+}

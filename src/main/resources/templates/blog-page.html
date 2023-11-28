@@ -14,10 +14,25 @@
             <button type="submit">Search</button>
         </form>
 
-        <span th:text="${#strings.toUpperCase(#authentication.principal.username)}"></span>
-        <form th:action = "@{/logout}" method="POST" >
-            <button value="Logout" class = "logout-button">Logout</button>
-        </form>
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <span th:text="${#strings.toUpperCase(#authentication.principal.username)}"></span>
+        </span>
+
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action = "@{/logout}" method="POST" >
+                <button value="Logout" class = "logout-button">Logout</button>
+             </form>
+        </span>
+
+        <span th:unless="${#authorization.expression('isAuthenticated()')}">
+            <span>Anonymous</span>
+        </span>
+
+        <span th:unless="${#authorization.expression('isAuthenticated()')}">
+            <form th:action = "@{/login}" method="GET" >
+                <button value="Login" class = "logout-button">Login</button>
+             </form>
+        </span>
 
     </header>
 
@@ -63,7 +78,9 @@
             <button type="submit">Clear</button>
         </form>
 
-        <a th:href="@{/createpost}" class = "addPost"><button>Add Post</button></a>
+        <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/createpost}" class = "addPost"><button>Add Post</button></a>
+        </span>
     </div>
 
     <div id = "posts">
@@ -78,10 +95,12 @@
             <div class = "aboutPost">
                 <a th:href="@{/post{postId}(postId=${post.id})}"><button>View</button></a>
 
-                <span th:if = "${#authentication.principal.username == post.author ||
-                #authorization.expression('hasRole(''ROLE_admin'')')}">
-                    <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
-                    <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+                <span th:if="${#authorization.expression('isAuthenticated()')}">
+                    <span th:if = "${#authentication.principal.username == post.author ||
+                    #authorization.expression('hasRole(''ROLE_admin'')')}">
+                        <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
+                        <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+                    </span>
                 </span>
             </div>
         </div>

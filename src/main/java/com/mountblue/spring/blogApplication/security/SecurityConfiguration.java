@@ -43,8 +43,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(
                         configurer -> configurer
-                                .requestMatchers("/css/**", "/register**", "/adduser").permitAll()
-                                .requestMatchers("/**").hasAnyRole("author","admin")
+                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(configurer ->
