@@ -1,5 +1,6 @@
 package com.mountblue.spring.blogApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -20,9 +21,11 @@ public class Comment {
     private String email;
     @Column(name = "comment")
     private String comment;
+    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "posts_id")
     private Post posts;
+    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User userComment;

@@ -1,5 +1,6 @@
 package com.mountblue.spring.blogApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -38,6 +39,7 @@ public class Post {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "posts",
             cascade = CascadeType.ALL)
     private List<Comment> comments;
+    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "user_id")
     private User userPost;

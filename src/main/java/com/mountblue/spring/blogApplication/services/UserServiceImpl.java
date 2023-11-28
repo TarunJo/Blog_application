@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService{
             }
             else {
                 Authorities newAuthorities = new Authorities(givenAuthorities);
-                Authorities admin = new Authorities("ROLE_admin");
+//                Authorities admin = new Authorities("ROLE_admin");
                 authoritiesRepository.save(newAuthorities);
 //                authoritiesRepository.save(admin);
                 user.addAuthorities(newAuthorities);
@@ -68,5 +68,14 @@ public class UserServiceImpl implements UserService{
         else {
             return false;
         }
+    }
+
+    @Override
+    public User authenticate(String username, String password) {
+        User user = userRepository.findByUserName(username);
+
+        if(user == null) return null;
+        else if(passwordEncoder.matches(password, user.getPassword())) return user;
+        else return null;
     }
 }

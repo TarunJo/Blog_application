@@ -3,9 +3,11 @@ package com.mountblue.spring.blogApplication.services;
 import com.mountblue.spring.blogApplication.entity.Comment;
 import com.mountblue.spring.blogApplication.entity.Post;
 import com.mountblue.spring.blogApplication.entity.Tag;
+import com.mountblue.spring.blogApplication.entity.User;
 import com.mountblue.spring.blogApplication.repository.CommentRepository;
 import com.mountblue.spring.blogApplication.repository.PostRepository;
 import com.mountblue.spring.blogApplication.repository.TagsRepository;
+import com.mountblue.spring.blogApplication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,25 +20,29 @@ import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostServicesImpl implements PostServices {
     private CommentRepository commentRepository;
     private PostRepository postRepository;
     private TagsRepository tagsRepository;
+    private UserRepository userRepository;
     @Autowired
     public PostServicesImpl(CommentRepository commentRepository,
-                            PostRepository postRepository, TagsRepository tagsRepository) {
+                            PostRepository postRepository,
+                            TagsRepository tagsRepository,
+                            UserRepository userRepository) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.tagsRepository = tagsRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     public void addPost(Post post, Tag tag) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        System.out.println(authentication);
+        User user = userRepository.findByUserName(authentication.getName());
 
         Post thePost = new Post(post.getTitle().trim(),
                 post.getExcerpt().trim(),
@@ -55,7 +61,6 @@ public class PostServicesImpl implements PostServices {
                 for(Tag theTag: tags) {
                     if(theTag.getName().equals(tempTag))
                     {
-                        System.out.println("2nd layer");
                         thePost.addTags(theTag);
                         break;
                     }
@@ -68,16 +73,21 @@ public class PostServicesImpl implements PostServices {
             }
         }
 
+        thePost.setUserPost(user);
         postRepository.save(thePost);
     }
 
     @Override
     public void updatePost(Post post, String tags) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         Post newPost = new Post(post.getTitle().trim(),
                 post.getExcerpt().trim(),
                 post.getContent().trim(),
-                post.getAuthor().trim());
+                authentication.getName());
         newPost.setId(post.getId());
+        User user = userRepository.findByUserName(authentication.getName());
+        newPost.setUserPost(user);
 
         List<Tag> tag = tagsRepository.findAll();
         List<String> tagName = new ArrayList<>();
@@ -135,17 +145,33 @@ public class PostServicesImpl implements PostServices {
 
     @Override
     public void deletePost(int postId) {
-        postRepository.deleteById(postId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.getName().equals(postRepository.findById(postId).get().getAuthor())
+                || authentication.getName().equals("admin"))
+            postRepository.deleteById(postId);
     }
 
     @Override
-    public void findAllPost(Model model,
-                            String directionOption,
-                            String fieldOption,
-                            Integer page,
-                            String author,
-                            String tags,
-                            String searchValue
+    public List<Post> getALlPost() {
+        return postRepository.findAll();
+    }
+
+    @Override
+    public Post getPostById(Integer id) {
+        Optional<Post> byId = postRepository.findById(id);
+        if(byId.isEmpty())
+            return null;
+        return postRepository.findById(id).get();
+    }
+
+    @Override
+    public void getAllPost(Model model,
+                           String directionOption,
+                           String fieldOption,
+                           Integer page,
+                           String author,
+                           String tags,
+                           String searchValue
     ) {
 
         author = (author == "" ? null : author);
@@ -195,6 +221,40 @@ public class PostServicesImpl implements PostServices {
         else {
             model.addAttribute("fieldOption", fieldOption);
         }
+    }
+
+    @Override
+    public Page<Post> getAllPost(String directionOption,
+                           String fieldOption,
+                           Integer page,
+                           String author,
+                           String tags,
+                           String searchValue,
+                           Integer pageSize)
+    {
+        author = (author == "" ? null : author);
+        tags = (tags == "" ? null : tags);
+        directionOption = (directionOption == null || directionOption.equals("asc") ? null : directionOption);
+        fieldOption = (fieldOption == null || fieldOption.equals("published") ? null : fieldOption);
+        searchValue = searchValue == null || searchValue.equals("") ? null :searchValue;
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+        List<String> stringTag = new ArrayList<>();
+
+        if(tags == null) {
+            stringTag = null;
+        }
+        else {
+            for(String tempTag: tags.split(","))
+            {
+                stringTag.add(tempTag.trim());
+            }
+        }
+
+        if(searchValue == null)
+            return postRepository.findAllCustom( author, stringTag, directionOption, fieldOption, pageable);
+        else
+            return postRepository.searchByValue(searchValue, pageable);
     }
 
     @Override

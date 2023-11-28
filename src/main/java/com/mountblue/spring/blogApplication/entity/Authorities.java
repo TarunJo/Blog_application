@@ -1,5 +1,6 @@
 package com.mountblue.spring.blogApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public class Authorities {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
+    @JsonIgnore
     @ManyToMany()
     @JoinTable(
             name = "user_authorities",

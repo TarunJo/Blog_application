@@ -28,7 +28,7 @@ public class PostController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         System.out.println(authentication);
-        postServices.findAllPost(model, directionOption, fieldOption, page, author, tags, searchValue);
+        postServices.getAllPost(model, directionOption, fieldOption, page, author, tags, searchValue);
 
         return "blog-page";
     }

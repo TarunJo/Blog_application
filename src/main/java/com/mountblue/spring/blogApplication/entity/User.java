@@ -1,5 +1,6 @@
 package com.mountblue.spring.blogApplication.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
 
@@ -20,16 +21,17 @@ public class User {
     @Column(name = "email")
     @NotNull
     private String email;
+    @JsonIgnore
     @Column(name = "password")
     @NotNull
     private String password;
     @Column(name = "is_active")
     private boolean isActive;
-
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userComment",
             cascade = CascadeType.ALL)
     private List<Comment> comments;
-
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "userPost",
             cascade = CascadeType.ALL)
     private List<Post> posts;

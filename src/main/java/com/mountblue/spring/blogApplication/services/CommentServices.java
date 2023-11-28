@@ -14,4 +14,10 @@ public interface CommentServices {
     void editComment(int postId, int commentId, Model model);
 
     void updateComment(int commentId, String comment);
+
+    List<Comment> getAllComments();
+
+    List<Comment> getAllCommentsByPostId(Integer postId);
+
+    Comment getCommentByCommentId(Integer commentId);
 }

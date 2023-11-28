@@ -6,18 +6,14 @@ import com.mountblue.spring.blogApplication.entity.User;
 import com.mountblue.spring.blogApplication.repository.CommentRepository;
 import com.mountblue.spring.blogApplication.repository.PostRepository;
 import com.mountblue.spring.blogApplication.repository.UserRepository;
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import javax.print.attribute.standard.PageRanges;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CommentServicesImpl implements CommentServices {
@@ -39,10 +35,11 @@ public class CommentServicesImpl implements CommentServices {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Post post = postRepository.findById(postId).get();
         User currentUser = userRepository.findByUserName(authentication.getName());
+
         Comment theComment =  new Comment(authentication.getName().toUpperCase(),
                 currentUser.getEmail(),
                 comment.getComment());
-
+        theComment.setUserComment(currentUser);
         post.addComment(theComment);
 
         postRepository.save(post);
@@ -66,5 +63,23 @@ public class CommentServicesImpl implements CommentServices {
         comment.setComment(commentString);
 
         commentRepository.save(comment) ;
+    }
+
+    @Override
+    public List<Comment> getAllComments() {
+        return commentRepository.findAll();
+    }
+
+    @Override
+    public List<Comment> getAllCommentsByPostId(Integer postId) {
+        return commentRepository.findByPostsId(postId);
+    }
+
+    @Override
+    public Comment getCommentByCommentId(Integer commentId) {
+        Optional<Comment> byId = commentRepository.findById(commentId);
+        if(byId.isEmpty()) return null;
+
+        return byId.get();
     }
 }
