@@ -79,14 +79,14 @@ public class PostServicesImpl implements PostServices {
 
     @Override
     public void updatePost(Post post, String tags) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Post oldPost = postRepository.getById(post.getId());
 
         Post newPost = new Post(post.getTitle().trim(),
                 post.getExcerpt().trim(),
                 post.getContent().trim(),
-                authentication.getName());
+                oldPost.getAuthor().trim());
         newPost.setId(post.getId());
-        User user = userRepository.findByUserName(authentication.getName());
+        User user = userRepository.findByUserName(oldPost.getAuthor().trim());
         newPost.setUserPost(user);
 
         List<Tag> tag = tagsRepository.findAll();
@@ -141,6 +141,17 @@ public class PostServicesImpl implements PostServices {
         }
 
         model.addAttribute("theTags", theTags);
+    }
+
+    @Override
+    public void editPost(int postId, Tag tag) {
+        Post post = postRepository.getReferenceById(postId);
+        Tag newTag = new Tag(tag.getName());
+        if(tagsRepository.findByName(newTag.getName()) == null)
+            tagsRepository.save(newTag);
+
+        post.addTags(newTag);
+        postRepository.save(post);
     }
 
     @Override

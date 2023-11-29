@@ -35,6 +35,7 @@ public class PostController {
 
     @GetMapping("/post{postId}")
     public String viewPost(@PathVariable Integer postId, Model model) {
+        if(postServices.getPostById(postId) == null) return "access-denied";
         postServices.getPostById(postId, model);
 
         return "view-post";
@@ -56,6 +57,7 @@ public class PostController {
 
     @GetMapping("/editpost{postId}")
     public String editPost(@PathVariable Integer postId, Model model) {
+        if(postServices.getPostById(postId) == null) return "access-denied";
         postServices.editPost(model, postId);
 
         return "edit-post";

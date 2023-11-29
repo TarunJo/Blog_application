@@ -29,6 +29,7 @@ public interface PostServices {
     void createPost(Model model);
 
     void editPost(Model model, int postId);
+    void editPost(int postId, Tag tag);
 
     void deletePost(int postId);
 }

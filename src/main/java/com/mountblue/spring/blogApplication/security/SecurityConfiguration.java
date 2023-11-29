@@ -2,6 +2,7 @@ package com.mountblue.spring.blogApplication.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,6 +47,8 @@ public class SecurityConfiguration {
                 )
                 .authorizeRequests(
                         configurer -> configurer
+                                .requestMatchers(HttpMethod.GET, "/api/post/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/posts").permitAll()
                                 .requestMatchers("/css/**", "/login", "/register", "/",
                                         "/post**").permitAll()
                                 .requestMatchers("/**").hasRole("author")
