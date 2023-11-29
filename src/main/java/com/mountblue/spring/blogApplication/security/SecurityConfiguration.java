@@ -49,8 +49,8 @@ public class SecurityConfiguration {
                         configurer -> configurer
                                 .requestMatchers(HttpMethod.GET, "/api/post/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/posts").permitAll()
-                                .requestMatchers("/css/**", "/login", "/register", "/",
-                                        "/post**").permitAll()
+                                .requestMatchers("/css/**", "/login", "/register**", "/",
+                                        "/post**", "/adduser**").permitAll()
                                 .requestMatchers("/**").hasRole("author")
                                 .anyRequest().authenticated()
                 )
