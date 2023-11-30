@@ -96,13 +96,13 @@ public class PostRestController {
     }
 
     @GetMapping("/customView")
-    public ResponseEntity<?> customView(@RequestParam(value = "direction", defaultValue = "") String direction,
-                                        @RequestParam(value = "field", defaultValue = "") String field,
-                                        @RequestParam(value = "author", defaultValue = "") String author,
-                                        @RequestParam(value = "tags", defaultValue = "") String tags,
-                                        @RequestParam(value = "searchValue", defaultValue = "") String searchValue,
-                                        @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                        @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize) {
+    public ResponseEntity<?> customView(@RequestParam(name = "direction", required = false) String direction,
+                                        @RequestParam(name = "field", required = false) String field,
+                                        @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                        @RequestParam(name = "author", required = false) String author,
+                                        @RequestParam(name = "tags", required = false) String tags,
+                                        @RequestParam(name = "searchValue", required = false) String searchValue,
+                                        @RequestParam(name = "pageSize", defaultValue = "6") Integer pageSize) {
         Page<Post> posts = postServices.getAllPost(
                 direction, field, page, author,
                 tags, searchValue, pageSize

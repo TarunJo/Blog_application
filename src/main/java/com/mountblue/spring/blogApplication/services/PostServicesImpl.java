@@ -10,6 +10,7 @@ import com.mountblue.spring.blogApplication.repository.TagsRepository;
 import com.mountblue.spring.blogApplication.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -17,10 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PostServicesImpl implements PostServices {
@@ -186,12 +184,14 @@ public class PostServicesImpl implements PostServices {
                            String tags,
                            String searchValue) {
         Page<Post> postPage;
+        Pageable pageable = PageRequest.of(page, 6);
+
         author = (author == "" ? null : author);
         tags = (tags == "" ? null : tags);
         directionOption = (directionOption == null || directionOption.equals("asc") ? null : directionOption);
         fieldOption = (fieldOption == null || fieldOption.equals("published") ? null : fieldOption);
-        Pageable pageable = PageRequest.of(page, 6);
         List<String> stringTag = new ArrayList<>();
+        searchValue = (searchValue == null || searchValue == "") ? null : searchValue;
 
         if(tags == null) {
             stringTag = null;
@@ -203,10 +203,18 @@ public class PostServicesImpl implements PostServices {
             }
         }
 
-        if(searchValue == null)
-            postPage = postRepository.findAllCustom( author, stringTag, directionOption, fieldOption, pageable);
+        if(searchValue == null) {
+            Set<Post> allPosts = postRepository.findAllCustom(author, stringTag, directionOption, fieldOption);
+            List<Post> postList = List.copyOf(allPosts);
+            int start = page * 6;
+            int end = Math.min((page + 1) * 6, postList.size());
+            List<Post> sublist = postList.subList(start, end);
+
+            postPage = new PageImpl<>(sublist, pageable, postList.size());
+        }
         else
             postPage = postRepository.searchByValue(searchValue, pageable);
+
 
         model.addAttribute("posts", postPage);
         model.addAttribute("currentPage", page);
@@ -238,13 +246,13 @@ public class PostServicesImpl implements PostServices {
                                  String tags,
                                  String searchValue,
                                  Integer pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
         author = (author == "" ? null : author);
         tags = (tags == "" ? null : tags);
         directionOption = (directionOption == null || directionOption.equals("asc") ? null : directionOption);
         fieldOption = (fieldOption == null || fieldOption.equals("published") ? null : fieldOption);
-        searchValue = searchValue == null || searchValue.equals("") ? null :searchValue;
-        Pageable pageable = PageRequest.of(page, pageSize);
         List<String> stringTag = new ArrayList<>();
+        searchValue = (searchValue == null || searchValue == "") ? null : searchValue;
 
         if(tags == null) {
             stringTag = null;
@@ -256,8 +264,15 @@ public class PostServicesImpl implements PostServices {
             }
         }
 
-        if(searchValue == null)
-            return postRepository.findAllCustom( author, stringTag, directionOption, fieldOption, pageable);
+        if(searchValue == null) {
+            Set<Post> allPosts = postRepository.findAllCustom(author, stringTag, directionOption, fieldOption);
+            List<Post> postList = List.copyOf(allPosts);
+            int start = page * pageSize;
+            int end = Math.min((page + 1) * pageSize, postList.size());
+            List<Post> sublist = postList.subList(start, end);
+
+            return new PageImpl<>(sublist, pageable, postList.size());
+        }
         else
             return postRepository.searchByValue(searchValue, pageable);
     }
