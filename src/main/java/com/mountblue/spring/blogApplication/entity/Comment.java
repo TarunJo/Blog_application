@@ -22,8 +22,8 @@ public class Comment {
     private String comment;
     @JsonIgnore
     @ManyToOne()
-    @JoinColumn(name = "posts_id")
-    private Post posts;
+    @JoinColumn(name = "post_id")
+    private Post post;
     @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "user_id")
@@ -93,12 +93,10 @@ public class Comment {
         this.updatedAt = updatedAt;
     }
 
-    public Post getPosts() {
-        return posts;
-    }
+    public Post getPost() {return post;}
 
-    public void setPosts(Post posts) {
-        this.posts = posts;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     public User getUserComment() {

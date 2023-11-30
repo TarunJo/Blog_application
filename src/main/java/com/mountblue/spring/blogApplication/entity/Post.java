@@ -35,7 +35,7 @@ public class Post {
     @Column(name = "updated_at")
     @UpdateTimestamp
     private Date updatedAt;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "posts",
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post",
             cascade = CascadeType.ALL)
     private List<Comment> comments;
     @JsonIgnore
@@ -161,12 +161,12 @@ public class Post {
         }
 
         comments.add(comment);
-        comment.setPosts(this);
+        comment.setPost(this);
     }
 
     @Override
     public String toString() {
-        return "Posts{" +
+        return "Post{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", excerpt='" + excerpt + '\'' +
