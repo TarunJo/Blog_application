@@ -20,11 +20,11 @@ public class CommentServicesImpl implements CommentServices {
     private CommentRepository commentRepository;
     private PostRepository postRepository;
     private UserRepository userRepository;
+
     @Autowired
     public CommentServicesImpl(CommentRepository commentRepository,
                                PostRepository postRepository,
-                               UserRepository userRepository
-    ) {
+                               UserRepository userRepository) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
@@ -35,7 +35,6 @@ public class CommentServicesImpl implements CommentServices {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Post post = postRepository.findById(postId).get();
         User currentUser = userRepository.findByUserName(authentication.getName());
-
         Comment theComment =  new Comment(authentication.getName().toUpperCase(),
                 currentUser.getEmail(),
                 comment.getComment());

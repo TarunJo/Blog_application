@@ -5,123 +5,126 @@
     <link rel="stylesheet" href="css/blog-page.css">
 </head>
 <body>
-    <header>
-        <a th:href = "@{/}"><h1>My Blog Application</h1></a>
+<header>
+    <a th:href = "@{/}"><h1>My Blog Application</h1></a>
 
-        <form th:action="@{/(searchValue = ${searchValue})}" method="GET">
-            <input type="text" th:value = "${searchValue}" name = "searchValue" id = "search" placeholder="Search">
-            <button type="submit">Search</button>
-        </form>
+    <form th:action="@{/(searchValue = ${searchValue})}" method="GET">
+        <input type="text" th:value = "${searchValue}" name = "searchValue" id = "search" placeholder="Search">
+        <button type="submit">Search</button>
+    </form>
 
-        <span th:if="${#authorization.expression('isAuthenticated()')}">
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
             <span th:text="${#strings.toUpperCase(#authentication.principal.username)}"></span>
         </span>
 
-        <span th:if="${#authorization.expression('isAuthenticated()')}">
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
             <form th:action = "@{/logout}" method="POST" >
                 <button value="Logout" class = "logout-button">Logout</button>
              </form>
         </span>
 
-        <span th:unless="${#authorization.expression('isAuthenticated()')}">
+    <span th:unless="${#authorization.expression('isAuthenticated()')}">
             <span>Anonymous</span>
         </span>
 
-        <span th:unless="${#authorization.expression('isAuthenticated()')}">
+    <span th:unless="${#authorization.expression('isAuthenticated()')}">
             <form th:action = "@{/login}" method="GET" >
                 <button value="Login" class = "logout-button">Login</button>
              </form>
         </span>
 
-    </header>
+</header>
 
-    <div id = "buttons">
-        <form th:action="@{/}" method="GET">
-            <label>Filter: </label>
+<div id = "buttons">
+    <form th:action="@{/}" method="GET">
+        <label>Filter: </label>
 
-            <input type="text" id="author" name="author" placeholder="Author" th:value="${author}">
-            <input type="text" id="tags" name="tagList"
-                   placeholder="Tag List (comma-separated):" th:value="${tagList}">
+        <input type="text" id="author" name="author" placeholder="Author" th:value="${author}">
+        <input type="text" id="tags" name="tagList"
+               placeholder="Tag List (comma-separated):" th:value="${tagList}">
 
-            <button type="submit">Apply</button>
-        </form>
+        <button type="submit">Apply</button>
+    </form>
 
-        <form th:action="@{/(directionOption = ${directionOption}, author = ${author},
+    <form th:action="@{/(directionOption = ${directionOption}, author = ${author},
                         tagList = ${tagList}, fieldOption = ${fieldOption})}" method="GET">
-            <select id="fieldOption" name="fieldOption" onchange="this.form.submit()">
-                <option value="published" th:selected="${fieldOption eq 'published'}">
-                    Published At
-                </option>
-                <option value="title" th:selected="${fieldOption eq 'title'}">
-                    Title
-                </option>
-                <option value="author" th:selected="${fieldOption eq 'author'}">
-                    Author
-                </option>
-            </select>
+        <select id="fieldOption" name="fieldOption" onchange="this.form.submit()">
+            <option value="published" th:selected="${fieldOption eq 'published'}">
+                Published At
+            </option>
 
-            <select id="directionOption" name="directionOption" onchange="this.form.submit()">
-                <option value="asc" th:selected="${directionOption eq 'asc'}">
-                    Ascending
-                </option>
-                <option value="desc" th:selected="${directionOption eq 'desc'}">
-                    Descending
-                </option>
-            </select>
+            <option value="title" th:selected="${fieldOption eq 'title'}">
+                Title
+            </option>
 
-            <input type="hidden" name="author" th:value="${author}" th:if="${author != null}" />
-            <input type="hidden" name="tagList" th:value="${tagList}" th:if="${tagList != null}" />
-        </form>
+            <option value="author" th:selected="${fieldOption eq 'author'}">
+                Author
+            </option>
+        </select>
 
-        <form th:action="@{/}" method="GET">
-            <button type="submit">Clear</button>
-        </form>
+        <select id="directionOption" name="directionOption" onchange="this.form.submit()">
+            <option value="asc" th:selected="${directionOption eq 'asc'}">
+                Ascending
+            </option>
 
-        <span th:if="${#authorization.expression('isAuthenticated()')}">
-            <a th:href="@{/createpost}" class = "addPost"><button>Add Post</button></a>
+            <option value="desc" th:selected="${directionOption eq 'desc'}">
+                Descending
+            </option>
+        </select>
+
+        <input type="hidden" name="author" th:value="${author}" th:if="${author != null}" />
+        <input type="hidden" name="tagList" th:value="${tagList}" th:if="${tagList != null}" />
+    </form>
+
+    <form th:action="@{/}" method="GET">
+        <button type="submit">Clear</button>
+    </form>
+
+    <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <a th:href="@{/createPost}" class = "addPost"><button>Add Post</button></a>
         </span>
-    </div>
+</div>
 
-    <div id = "posts">
-        <div th:each = "post: ${posts}" class = "post">
-            <h2 th:text = "${post.title}"></h2>
-            <p th:text = "${#strings.toUpperCase(post.author) + ', ' + #dates.format(post.publishedAt, 'dd/MM/YYYY')}"></p>
-            <p th:text = "${post.excerpt}"></p><br>
-            <span th:each = "viewTags: ${post.tags}">
+<div id = "posts">
+    <div th:each = "post: ${posts}" class = "post">
+        <h2 th:text = "${post.title}"></h2>
+        <p th:text = "${#strings.toUpperCase(post.author) + ', ' + #dates.format(post.publishedAt, 'dd/MM/YYYY')}"></p>
+        <p th:text = "${post.excerpt}"></p><br>
+        <span th:each = "viewTags: ${post.tags}">
                 <span th:text="*{viewTags.name}" class = "tag"></span>
             </span> <br><br>
 
-            <div class = "aboutPost">
-                <a th:href="@{/post{postId}(postId=${post.id})}"><button>View</button></a>
+        <div class = "aboutPost">
+            <a th:href="@{/post{postId}(postId=${post.id})}"><button>View</button></a>
 
-                <span th:if="${#authorization.expression('isAuthenticated()')}">
+            <span th:if="${#authorization.expression('isAuthenticated()')}">
                     <span th:if = "${#authentication.principal.username == post.author ||
                     #authorization.expression('hasRole(''ROLE_admin'')')}">
-                        <a th:href="@{/editpost{postId}(postId=${post.id})}"><button>Edit</button></a>
-                        <a th:href="@{/deletepost{postId}(postId=${post.id})}"><button>Delete</button></a>
+                        <a th:href="@{/editPost{postId}(postId=${post.id})}"><button>Edit</button></a>
+                        <a th:href="@{/deletePost{postId}(postId=${post.id})}"><button>Delete</button></a>
                     </span>
                 </span>
-            </div>
         </div>
     </div>
+</div>
 
-    <div class="pagination">
-        <a th:href="@{/(directionOption = ${directionOption}, page = ${currentPage - 1}, author = ${author},
+<div class="pagination">
+    <a th:href="@{/(directionOption = ${directionOption}, page = ${currentPage - 1}, author = ${author},
            tagList = ${tagList}, fieldOption = ${fieldOption}, searchValue = ${searchValue})}"
-           th:classappend="${currentPage != 0 ? '': 'disabled'}">
-            Prev
-        </a>
+       th:classappend="${currentPage != 0 ? '': 'disabled'}">
+        Prev
+    </a>
 
-        <a th:classappend = "${currentPage == i-1?'active':''}"
-           th:each="i : ${#numbers.sequence(1, totalPages == 0 ? 1 : totalPages)}"
-           th:href="@{/(directionOption = ${directionOption}, page=${i-1}, author = ${author},
+    <a th:classappend = "${currentPage == i-1?'active':''}"
+       th:each="i : ${#numbers.sequence(1, totalPages == 0 ? 1 : totalPages)}"
+       th:href="@{/(directionOption = ${directionOption}, page=${i-1}, author = ${author},
             tagList = ${tagList}, fieldOption = ${fieldOption}, searchValue = ${searchValue})}">
-            <span th:text="${i}"></span>
-        </a>
+        <span th:text="${i}"></span>
+    </a>
 
-        <a th:href="@{/(directionOption = ${directionOption}, page = ${currentPage + 1}, author = ${author},
+    <a th:href="@{/(directionOption = ${directionOption}, page = ${currentPage + 1}, author = ${author},
         tagList = ${tagList}, fieldOption = ${fieldOption}, searchValue = ${searchValue})}"
-           th:classappend = "${currentPage+1 != (totalPages == 0 ? 1 : totalPages) ? '': 'disabled'}">Next</a>
-    </div>
+       th:classappend = "${currentPage+1 != (totalPages == 0 ? 1 : totalPages) ? '': 'disabled'}">Next</a>
+</div>
 </body>
 </html>

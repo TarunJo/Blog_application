@@ -15,9 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class CommentRestController {
-    CommentServices commentServices;
-    PostServices postServices;
-
+    private CommentServices commentServices;
+    private PostServices postServices;
 
     @Autowired
     public CommentRestController(CommentServices commentServices, PostServices postServices) {
@@ -60,8 +59,7 @@ public class CommentRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else if(!commentServices.getCommentByCommentId(commentId).getName().
                 equals(authentication.getName().toUpperCase()) &&
-                !authentication.getAuthorities().toString().contains("ROLE_admin"))
-        {
+                !authentication.getAuthorities().toString().contains("ROLE_admin")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -83,18 +81,16 @@ public class CommentRestController {
 
     @PutMapping("/comment/{commentId}")
     public ResponseEntity<?> updateCommentByCommentId(@PathVariable("commentId") Integer commentId,
-                                              @RequestBody Comment comment) {
+                                                      @RequestBody Comment comment) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(commentServices.getCommentByCommentId(commentId) == null)
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else if(!commentServices.getCommentByCommentId(commentId).getName().
                 equals(authentication.getName().toUpperCase()) &&
-            !authentication.getAuthorities().toString().contains("ROLE_admin"))
-        {
+                !authentication.getAuthorities().toString().contains("ROLE_admin")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
         commentServices.updateComment(commentId, comment.getComment());
 
         return new ResponseEntity<>(HttpStatus.OK);

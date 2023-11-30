@@ -14,7 +14,6 @@ import javax.sql.DataSource;
 
 @Configuration
 public class SecurityConfiguration {
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -24,12 +23,10 @@ public class SecurityConfiguration {
     public UserDetailsManager userDetailsManager(DataSource dataSource) {
         JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
 
-        // define query to retrieve a user by username
         jdbcUserDetailsManager.setUsersByUsernameQuery(
                 "select user_name, password, is_active from users where user_name = ?"
         );
 
-        // define query to retrieve the authorities/roles by username
         jdbcUserDetailsManager.setAuthoritiesByUsernameQuery(
                 "select u.user_name, a.user_role from users u " +
                         "LEFT JOIN user_authorities ua on u.id = ua.user_id " +
@@ -43,7 +40,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(
-                csrf -> csrf.disable()
+                        csrf -> csrf.disable()
                 )
                 .authorizeRequests(
                         configurer -> configurer
@@ -56,7 +53,7 @@ public class SecurityConfiguration {
                 )
                 .exceptionHandling(configurer ->
                         configurer
-                                .accessDeniedPage("/access-denied")
+                                .accessDeniedPage("/error")
                 )
                 .formLogin(form ->
                         form

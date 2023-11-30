@@ -1,12 +1,10 @@
 package com.mountblue.spring.blogApplication.rest;
 
 import com.mountblue.spring.blogApplication.entity.User;
-import com.mountblue.spring.blogApplication.repository.UserRepository;
 import com.mountblue.spring.blogApplication.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +22,7 @@ public class UserRestController {
 
     @GetMapping("/authenticate")
     public ResponseEntity<?> authentication(@RequestParam("username") String username,
-                                            @RequestParam("password") String password
-                                            )
-    {
+                                            @RequestParam("password") String password) {
         User user = userService.authenticate(username, password);
 
         if(user == null)

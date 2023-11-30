@@ -10,7 +10,6 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 public class User {
-    // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -43,7 +42,6 @@ public class User {
     )
     private List<Authorities> authorities;
 
-    // Constructors
     public User() {}
 
     public User(String name, String email, String password) {
@@ -52,8 +50,6 @@ public class User {
         this.password = password;
         this.isActive = true;
     }
-
-    // Getters and Setters
 
     public List<Authorities> getAuthorities() {
         return authorities;
@@ -127,7 +123,6 @@ public class User {
         this.password = password;
     }
 
-    // add a convenience method
     public void addPost(Post thePost) {
         if(posts == null) {
             posts = new ArrayList<>();
@@ -152,7 +147,6 @@ public class User {
         authorities.add(theAuthorities);
     }
 
-    // toString Method
     @Override
     public String toString() {
         return "User{" +

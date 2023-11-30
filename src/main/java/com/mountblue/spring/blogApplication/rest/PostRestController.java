@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class PostRestController {
-    PostServices postServices;
+    private PostServices postServices;
 
     @Autowired
     public PostRestController(PostServices postServices) {
@@ -45,13 +45,11 @@ public class PostRestController {
     public ResponseEntity<?> deletePostById(@PathVariable("postId") Integer id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(postServices.getPostById(id) == null)
-        {
+        if(postServices.getPostById(id) == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else if(!postServices.getPostById(id).getAuthor().equals(authentication.getName()) &&
-                !authentication.getAuthorities().toString().contains("ROLE_admin"))
-        {
+                !authentication.getAuthorities().toString().contains("ROLE_admin")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         else {
@@ -64,13 +62,11 @@ public class PostRestController {
     public ResponseEntity<?> updatePost(@PathVariable("postId") Integer id, @RequestBody Post post) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(postServices.getPostById(id) == null)
-        {
+        if(postServices.getPostById(id) == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         else if(!postServices.getPostById(id).getAuthor().equals(authentication.getName()) &&
-                !authentication.getAuthorities().toString().contains("ROLE_admin"))
-        {
+                !authentication.getAuthorities().toString().contains("ROLE_admin")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         else {
@@ -106,9 +102,7 @@ public class PostRestController {
                                         @RequestParam(value = "tags", defaultValue = "") String tags,
                                         @RequestParam(value = "searchValue", defaultValue = "") String searchValue,
                                         @RequestParam(value = "page", defaultValue = "0") Integer page,
-                                        @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize
-    )
-    {
+                                        @RequestParam(value = "pageSize", defaultValue = "6") Integer pageSize) {
         Page<Post> posts = postServices.getAllPost(
                 direction, field, page, author,
                 tags, searchValue, pageSize

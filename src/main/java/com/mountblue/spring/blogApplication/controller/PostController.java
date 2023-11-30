@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class PostController {
+    private PostServices postServices;
+
     @Autowired
-    PostServices postServices;
+    public PostController(PostServices postServices) {
+        this.postServices = postServices;
+    }
 
     @GetMapping("/")
     public String blogPage(Model model,
@@ -22,56 +26,52 @@ public class PostController {
                            @RequestParam(name = "page", defaultValue = "0") Integer page,
                            @RequestParam(name = "author", required = false) String author,
                            @RequestParam(name = "tagList", required = false) String tags,
-                           @RequestParam(name = "searchValue",required = false) String searchValue
-    ) {
-
+                           @RequestParam(name = "searchValue",required = false) String searchValue) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-//        System.out.println(authentication);
         postServices.getAllPost(model, directionOption, fieldOption, page, author, tags, searchValue);
 
         return "blog-page";
     }
 
     @GetMapping("/post{postId}")
-    public String viewPost(@PathVariable Integer postId, Model model) {
-        if(postServices.getPostById(postId) == null) return "access-denied";
+    public String viewPost(@PathVariable("postId") Integer postId, Model model) {
+        if(postServices.getPostById(postId) == null) return "error";
         postServices.getPostById(postId, model);
 
         return "view-post";
     }
 
-    @GetMapping("/createpost")
+    @GetMapping("/createPost")
     public String createPost(Model model) {
         postServices.createPost(model);
 
         return "new-post";
     }
 
-    @PostMapping("/addpost")
+    @PostMapping("/addPost")
     public String addPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag) {
         postServices.addPost(post, tag);
 
         return "redirect:/";
     }
 
-    @GetMapping("/editpost{postId}")
-    public String editPost(@PathVariable Integer postId, Model model) {
-        if(postServices.getPostById(postId) == null) return "access-denied";
+    @GetMapping("/editPost{postId}")
+    public String editPost(@PathVariable("postId") Integer postId, Model model) {
+        if(postServices.getPostById(postId) == null) return "error";
         postServices.editPost(model, postId);
 
         return "edit-post";
     }
 
-    @PostMapping("/updatepost")
+    @PostMapping("/updatePost")
     public String updatePost(@ModelAttribute("post") Post post, @ModelAttribute("tg") String tags) {
         postServices.updatePost(post, tags);
 
         return "redirect:/";
     }
 
-    @GetMapping("/deletepost{postId}")
-    public String deletePost(@PathVariable Integer postId) {
+    @GetMapping("/deletePost{postId}")
+    public String deletePost(@PathVariable("postId") Integer postId) {
         postServices.deletePost(postId);
 
         return "redirect:/";

@@ -27,6 +27,7 @@ public class TagServicesImpl implements TagServices{
         Optional<Tag> byId = tagsRepository.findById(tagId);
 
         if(byId.isEmpty()) return null;
+
         return tagsRepository.findById(tagId).get();
     }
 
@@ -34,7 +35,6 @@ public class TagServicesImpl implements TagServices{
     public void updateTagById(Integer tagId, Tag tag) {
         Tag oldTag = tagsRepository.findById(tagId).get();
         oldTag.setName(tag.getName());
-
         tagsRepository.save(oldTag);
     }
 

@@ -28,6 +28,7 @@ public class PostServicesImpl implements PostServices {
     private PostRepository postRepository;
     private TagsRepository tagsRepository;
     private UserRepository userRepository;
+
     @Autowired
     public PostServicesImpl(CommentRepository commentRepository,
                             PostRepository postRepository,
@@ -43,7 +44,6 @@ public class PostServicesImpl implements PostServices {
     public void addPost(Post post, Tag tag) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = userRepository.findByUserName(authentication.getName());
-
         Post thePost = new Post(post.getTitle().trim(),
                 post.getExcerpt().trim(),
                 post.getContent().trim(), authentication.getName());
@@ -80,7 +80,6 @@ public class PostServicesImpl implements PostServices {
     @Override
     public void updatePost(Post post, String tags) {
         Post oldPost = postRepository.getById(post.getId());
-
         Post newPost = new Post(post.getTitle().trim(),
                 post.getExcerpt().trim(),
                 post.getContent().trim(),
@@ -128,7 +127,6 @@ public class PostServicesImpl implements PostServices {
     public void editPost(Model model, int postId) {
         Post post = postRepository.findById(postId).get();
         model.addAttribute("post", post);
-
         List<Tag> tags = post.getTags();
         String theTags = "";
 
@@ -147,6 +145,7 @@ public class PostServicesImpl implements PostServices {
     public void editPost(int postId, Tag tag) {
         Post post = postRepository.getReferenceById(postId);
         Tag newTag = new Tag(tag.getName());
+
         if(tagsRepository.findByName(newTag.getName()) == null)
             tagsRepository.save(newTag);
 
@@ -157,6 +156,7 @@ public class PostServicesImpl implements PostServices {
     @Override
     public void deletePost(int postId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if(authentication.getName().equals(postRepository.findById(postId).get().getAuthor())
                 || authentication.getName().equals("admin"))
             postRepository.deleteById(postId);
@@ -170,8 +170,10 @@ public class PostServicesImpl implements PostServices {
     @Override
     public Post getPostById(Integer id) {
         Optional<Post> byId = postRepository.findById(id);
+
         if(byId.isEmpty())
             return null;
+
         return postRepository.findById(id).get();
     }
 
@@ -182,14 +184,12 @@ public class PostServicesImpl implements PostServices {
                            Integer page,
                            String author,
                            String tags,
-                           String searchValue
-    ) {
-
+                           String searchValue) {
+        Page<Post> postPage;
         author = (author == "" ? null : author);
         tags = (tags == "" ? null : tags);
         directionOption = (directionOption == null || directionOption.equals("asc") ? null : directionOption);
         fieldOption = (fieldOption == null || fieldOption.equals("published") ? null : fieldOption);
-
         Pageable pageable = PageRequest.of(page, 6);
         List<String> stringTag = new ArrayList<>();
 
@@ -203,8 +203,6 @@ public class PostServicesImpl implements PostServices {
             }
         }
 
-        Page<Post> postPage;
-
         if(searchValue == null)
             postPage = postRepository.findAllCustom( author, stringTag, directionOption, fieldOption, pageable);
         else
@@ -216,8 +214,6 @@ public class PostServicesImpl implements PostServices {
         model.addAttribute("author", author);
         model.addAttribute("tagList", tags);
         model.addAttribute("searchValue", searchValue);
-
-
 
         if(directionOption == null) {
             model.addAttribute("directionOption", "asc");
@@ -236,19 +232,17 @@ public class PostServicesImpl implements PostServices {
 
     @Override
     public Page<Post> getAllPost(String directionOption,
-                           String fieldOption,
-                           Integer page,
-                           String author,
-                           String tags,
-                           String searchValue,
-                           Integer pageSize)
-    {
+                                 String fieldOption,
+                                 Integer page,
+                                 String author,
+                                 String tags,
+                                 String searchValue,
+                                 Integer pageSize) {
         author = (author == "" ? null : author);
         tags = (tags == "" ? null : tags);
         directionOption = (directionOption == null || directionOption.equals("asc") ? null : directionOption);
         fieldOption = (fieldOption == null || fieldOption.equals("published") ? null : fieldOption);
         searchValue = searchValue == null || searchValue.equals("") ? null :searchValue;
-
         Pageable pageable = PageRequest.of(page, pageSize);
         List<String> stringTag = new ArrayList<>();
 

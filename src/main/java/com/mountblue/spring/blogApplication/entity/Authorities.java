@@ -17,9 +17,8 @@ public class Authorities {
     @ManyToMany()
     @JoinTable(
             name = "user_authorities",
-            joinColumns = @JoinColumn(name = "role_id"), // field from current class
-            inverseJoinColumns=@JoinColumn(name = "user_id") // field from other class
-    )
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns=@JoinColumn(name = "user_id"))
     private List<User> userRole;
     @Column(name = "user_role")
     private String role;

@@ -10,18 +10,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class UserController {
+    private UserService userService;
+
     @Autowired
-    UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/login")
     public String showMyLoginPage() {
-
         return "login-page";
     }
 
     @RequestMapping("/register")
     public String register() {
-
         return "register-page";
     }
 
@@ -29,7 +31,6 @@ public class UserController {
     public String addUser(@ModelAttribute("username") String username,
                           @ModelAttribute("email") String email,
                           @ModelAttribute("password") String password) {
-
         if(userService.addUser(username.trim(), email.trim(), password.trim()))
             return "redirect:/login";
         else

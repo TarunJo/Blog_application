@@ -15,21 +15,13 @@ public interface PostServices {
     Page<Post> getAllPost(String directionOption, String fieldOption, Integer page,
                           String author,
                           String tags, String searchValue, Integer pageSize);
-
     List<Post> getALlPost();
-
     Post getPostById(Integer id);
-
     void getPostById(int theId, Model model);
-
     void addPost(Post post, Tag tag);
-
     void updatePost(Post post, String tags);
-
     void createPost(Model model);
-
     void editPost(Model model, int postId);
     void editPost(int postId, Tag tag);
-
     void deletePost(int postId);
 }

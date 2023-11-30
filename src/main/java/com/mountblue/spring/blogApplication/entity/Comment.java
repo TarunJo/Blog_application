@@ -10,7 +10,6 @@ import java.util.Date;
 @Entity
 @Table(name = "comments")
 public class Comment {
-    // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -36,7 +35,6 @@ public class Comment {
     @UpdateTimestamp
     private Date updatedAt;
 
-    // Constructors
     public Comment() {}
 
     public Comment(String name, String email, String comment) {
@@ -47,7 +45,6 @@ public class Comment {
         this.updatedAt = new Date();
     }
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -112,7 +109,6 @@ public class Comment {
         this.userComment = user_comment;
     }
 
-    // toString Method
     @Override
     public String toString() {
         return "Comments{" +

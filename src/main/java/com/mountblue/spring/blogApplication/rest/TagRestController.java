@@ -29,6 +29,7 @@ public class TagRestController {
         List<Tag> tags = tagServices.getAllTags();
 
         if(tags.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         return new ResponseEntity<>(tags, HttpStatus.OK);
     }
 
@@ -37,16 +38,17 @@ public class TagRestController {
         Tag tag = tagServices.getTagByTagId(tagId);
 
         if(tag == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
     @GetMapping("/tags/{postId}")
     public ResponseEntity<?> getAllTagsByPostId(@PathVariable("postId") Integer postId) {
         if(postServices.getPostById(postId) == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         List<Tag> tags = postServices.getPostById(postId).getTags();
 
         if(tags.isEmpty()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
         return new ResponseEntity<>(tags, HttpStatus.OK);
     }
 
@@ -55,13 +57,12 @@ public class TagRestController {
                                           @RequestBody Tag tag){
         if(postId == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if(postServices.getPostById(postId) == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else if(!postServices.getPostById(postId).getAuthor().equals(authentication.getName()) &&
-                !authentication.getAuthorities().toString().contains("ROLE_admin"))
-        {
+                !authentication.getAuthorities().toString().contains("ROLE_admin")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
         postServices.editPost(postId, tag);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -69,15 +70,14 @@ public class TagRestController {
 
     @PutMapping("/tag")
     public ResponseEntity<?> updateTag(@RequestParam(value = "tagId", defaultValue = "") Integer tagId,
-                                          @RequestBody Tag tag){
+                                       @RequestBody Tag tag){
         if(tagId == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!authentication.getAuthorities().toString().contains("ROLE_admin"))
-        {
+
+        if(!authentication.getAuthorities().toString().contains("ROLE_admin")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         if(tagServices.getTagByTagId(tagId) == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         tagServices.updateTagById(tagId, tag);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -86,12 +86,11 @@ public class TagRestController {
     public ResponseEntity<?> DeleteTag(@RequestParam(value = "tagId", defaultValue = "") Integer tagId){
         if(tagId == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!authentication.getAuthorities().toString().contains("ROLE_admin"))
-        {
+
+        if(!authentication.getAuthorities().toString().contains("ROLE_admin")) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         if(tagServices.getTagByTagId(tagId) == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         tagServices.deleteTag(tagId);
 
         return new ResponseEntity<>(HttpStatus.OK);

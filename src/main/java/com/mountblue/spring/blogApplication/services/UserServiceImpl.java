@@ -18,6 +18,7 @@ public class UserServiceImpl implements UserService{
     private UserRepository userRepository;
     private AuthoritiesRepository authoritiesRepository;
     private BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
     public UserServiceImpl(UserRepository userRepository, AuthoritiesRepository authoritiesRepository) {
         this.userRepository = userRepository;
@@ -45,8 +46,7 @@ public class UserServiceImpl implements UserService{
 
             if(authoritiesName.contains(givenAuthorities)) {
                 for(Authorities theAuthorities: authoritiesList) {
-                    if(theAuthorities.getRole().equals(givenAuthorities))
-                    {
+                    if(theAuthorities.getRole().equals(givenAuthorities)) {
                         user.addAuthorities(theAuthorities);
                         break;
                     }
@@ -60,7 +60,6 @@ public class UserServiceImpl implements UserService{
                 user.addAuthorities(newAuthorities);
 //                user.addAuthorities(admin);
             }
-
             userRepository.save(user);
 
             return true;

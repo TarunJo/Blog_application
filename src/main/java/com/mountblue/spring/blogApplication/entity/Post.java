@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Table(name = "posts")
 public class Post {
-    // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -51,7 +50,6 @@ public class Post {
     )
     private List<Tag> tags;
 
-    // Constructors.
     public Post() {}
 
     public Post(String title, String excerpt, String content, String author) {
@@ -65,7 +63,6 @@ public class Post {
         this.updatedAt = new Date();
     }
 
-    // Getters and Setters
     public Integer getId() {
         return id;
     }
@@ -150,7 +147,6 @@ public class Post {
         this.userPost = userPost;
     }
 
-    // add a convenience method
     public void addTags(Tag theTag) {
         if(tags == null) {
             tags = new ArrayList<>();
@@ -168,7 +164,6 @@ public class Post {
         comment.setPosts(this);
     }
 
-    // toString Method
     @Override
     public String toString() {
         return "Posts{" +
